@@ -35,6 +35,9 @@ class FakeNative:
             self.fail = False
             raise RuntimeError("Interrupted after staging")
 
+    def file_icon_data(self):
+        return (ROOT / "assets/fluent/folder.svg").read_bytes()
+
     def refresh_icons(self):
         self.icon_refreshes += 1
 
@@ -75,8 +78,6 @@ class LifecycleTest(unittest.TestCase):
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, target)
         shutil.copytree(ROOT / "variants", self.source / "variants")
-        (self.source / "assets/fluent").mkdir(parents=True)
-        shutil.copyfile(ROOT / "assets/fluent/files.svg", self.source / "assets/fluent/files.svg")
         self.original = {"version": 1, "bar": {"position": "top", "transparent": True, "layout": {
             "left": [{"id": "omarchy.menu", "custom": "keep"}, {"id": "omarchy.workspaces"}],
             "center": [{"id": "omarchy.clock"}], "right": [{"id": "tool", "keep": 1}]}},
@@ -178,7 +179,7 @@ class LifecycleTest(unittest.TestCase):
 
     def test_files_icon_is_owned_refreshed_once_and_removed_on_disable(self):
         self.manager.reconcile(self.source)
-        self.assertEqual(self.paths.file_icon.read_bytes(), (self.source / "assets/fluent/files.svg").read_bytes())
+        self.assertEqual(self.paths.file_icon.read_bytes(), self.native.file_icon_data())
         self.assertEqual(self.native.icon_refreshes, 1)
         self.manager.reconcile(self.source)
         self.select_background("dark")

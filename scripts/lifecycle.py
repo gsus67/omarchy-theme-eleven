@@ -166,6 +166,18 @@ class Native:
                     for name in ("colors.toml", "shell.toml")]
         self.command(["omarchy-shell", "shell", "applyTheme", *payloads])
 
+    def file_icon_data(self):
+        # Reuse the installed folder artwork selected by Eleven's icon theme.
+        # Embed PNG bytes in a self-contained SVG so the existing SVG-first app
+        # index resolves it without altering any shared theme or cache.
+        png = Path("/usr/share/icons/Yaru-blue/256x256/places/folder.png")
+        if png.is_file():
+            data = base64.b64encode(png.read_bytes()).decode("ascii")
+            return ('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
+                    'width="256" height="256" viewBox="0 0 256 256"><image width="256" height="256" '
+                    'xlink:href="data:image/png;base64,' + data + '"/></svg>\n').encode()
+        return Path("/usr/share/icons/Adwaita/scalable/places/folder.svg").read_bytes()
+
     def refresh_icons(self):
         # Recreate the native widgets' icon indexes without changing Taskbar.
         self.command(["omarchy-shell", "shell", "rescanPlugins"])
@@ -259,16 +271,12 @@ class Manager:
         raise RuntimeError("Shell settings are changing; retry activation")
 
     def stage_file_icon(self, receipt):
-        source = Path(receipt["source"])
-        relative = "assets/fluent/files.svg"
         target = self.paths.file_icon
-        if not plain_asset(source, relative) or not (source / relative).is_file():
-            raise RuntimeError("Invalid Files icon resource")
         if not plain_asset(self.paths.icon_root, str(target.relative_to(self.paths.icon_root))):
             raise RuntimeError("Files icon path contains a symlink")
         if target.exists() and digest(target) != receipt.get("fileIconHash"):
             raise RuntimeError("Files icon path already belongs to the user")
-        content = (source / relative).read_bytes()
+        content = self.native.file_icon_data()
         current = hashlib.sha256(content).hexdigest()
         if target.is_file() and digest(target) == current:
             return False

@@ -35,7 +35,7 @@ ElevenButton {
                 x: (index % 2 === 0 ? 0.28 : 0.72) * tile.width - 16
                 y: (index < 2 ? 0.28 : 0.72) * tile.width - 16
                 source: String(modelData.id || "").replace(/\.desktop$/, "") === "org.gnome.Nautilus"
-                    ? Qt.resolvedUrl("../assets/fluent/files.svg")
+                    ? (tile.library ? tile.library.iconSource("folder") : Qt.resolvedUrl("../assets/fluent/folder.svg"))
                     : tile.library ? tile.library.iconSource(modelData.icon || "") : ""
                 sourceSize.width: 48
                 sourceSize.height: 48

@@ -203,3 +203,13 @@ colisiones/enlaces y conservar ediciones ajenas. Retirar solo archivo propio y
 padres vacíos del contenedor. rescanPlugins nativo una vez al añadir/retirar
 recrea índices/widgets; no se ejecuta al alternar claro/oscuro. No cambios de
 Taskbar, lanzadores, asociaciones, paquetes ni cachés compartidas.
+
+
+Corrección de preferencia del propietario: prefiere el icono de las carpetas
+existentes al Fluent Document Folder a color. Este último se RETIRÓ del árbol.
+Inicio resuelve folder con el catálogo nativo; Taskbar reutiliza el PNG local
+de Yaru-blue incrustado sin enlaces externos en un SVG autocontenido (necesario
+por su índice SVG-first); alternativa SVG Adwaita si Yaru-blue no existe. No
+se redistribuyen esos recursos ni se cambian sus licencias. El recibo y la
+retirada del único icono aplicado siguen igual. No confundir propuesta de
+Document Folder con el resultado final elegido por el propietario.

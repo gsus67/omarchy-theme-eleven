@@ -19,15 +19,13 @@ Distribución ajustada al Windows que mostró el propietario: búsqueda redondea
 
 El botón conserva el icono nativo de Omarchy en azul (`#0078d4`), un área de clic de 44 píxeles y un símbolo más grande, además del clic derecho para abrir la terminal; solo cambia el menú que abre al pulsarlo. Los iconos de aplicaciones son los instalados. Inicio se despliega debajo de la barra superior, con la barra encima; el panel nativo adapta el anclaje si la barra está en otra posición. No sustituye los menús internos de selección de Omarchy.
 
-El icono de Archivos usa el SVG oficial Fluent **Document Folder** a color,
-con licencia MIT, sin modificar. Inicio lo usa en anclados, categorías y acceso
-al explorador. Para la Taskbar se prepara únicamente una copia propia en
+Archivos usa el mismo icono de carpeta del tema instalado, tanto en Inicio
+como en la Taskbar. Se reutiliza el recurso local de Yaru-blue (Adwaita como
+alternativa); no se descarga ni redistribuye otro paquete. Para el índice de
+Taskbar se prepara una copia autocontenida en
 `~/.local/share/icons/eleven-managed/scalable/apps/org.gnome.Nautilus.svg`.
-Omarchy y Taskbar ya priorizan ese directorio en su índice de iconos; no se
-modifica Taskbar, ningún lanzador `.desktop` ni las asociaciones de archivos.
-Una recarga nativa del registro de plugins actualiza sus índices al aplicar o
-retirar el icono; no se repite al cambiar de modo. Solo se retira la copia con
-hash propio, y se conserva si el usuario la modifica.
+No modifica Taskbar, lanzadores `.desktop`, asociaciones ni cachés compartidas.
+La copia aplicada se retira al desactivar si conserva su hash propio.
 
 ## Claro y oscuro desde los fondos
 
@@ -99,7 +97,7 @@ En esa vista previa, los cambios de anclados solo duran hasta cerrarla. Los acce
 
 ## Licencia
 
-Código, paleta y fondo originales bajo [MIT](LICENSE). Los iconos de aplicaciones y las fuentes se reutilizan del sistema. Para los controles del menú se incluyen 15 símbolos SVG de Fluent System Icons de Microsoft, con variantes de contraste para ambos modos, bajo MIT; su [licencia](assets/fluent/LICENSE), [avisos](assets/fluent/NOTICE) y [procedencia con revisión fija y hashes](assets/fluent/sources.json) se conservan en el repositorio. No contiene recursos extraídos de Windows, fuentes propietarias ni logotipos de Microsoft y no está afiliado a Microsoft. Los SVG solo se han recoloreado; no se han extraído iconos ni fuentes de Windows.
+Código, paleta y fondo originales bajo [MIT](LICENSE). Los iconos de aplicaciones y las fuentes se reutilizan del sistema. Para los controles del menú se incluyen 14 símbolos SVG de Fluent System Icons de Microsoft, con variantes de contraste para ambos modos, bajo MIT; su [licencia](assets/fluent/LICENSE), [avisos](assets/fluent/NOTICE) y [procedencia con revisión fija y hashes](assets/fluent/sources.json) se conservan en el repositorio. No contiene recursos extraídos de Windows, fuentes propietarias ni logotipos de Microsoft y no está afiliado a Microsoft. Los SVG solo se han recoloreado; no se han extraído iconos ni fuentes de Windows.
 
 ## Atajos compatibles
 

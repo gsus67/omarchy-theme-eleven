@@ -49,7 +49,7 @@ Rectangle {
         powerMenu.open();
     }
     function symbol(name) {
-        if (name === "folder") return Qt.resolvedUrl("../assets/fluent/files.svg");
+        if (name === "folder") return library ? library.iconSource("folder") : Qt.resolvedUrl("../assets/fluent/folder.svg");
         return Qt.resolvedUrl("../assets/fluent/" + (Appearance.dark ? "dark/" : "") + name + ".svg");
     }
     function catalog(text) {
