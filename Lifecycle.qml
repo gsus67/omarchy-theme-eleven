@@ -22,6 +22,35 @@ Item {
         StartUI.Session.library = appCatalog;
         apply.running = true;
     }
+    // Watch only directory metadata: never load wallpaper bytes. This catches
+    // atomic replacement of the native background symlink without polling.
+    FileView {
+        path: Quickshell.env("HOME") + "/.local/state/omarchy/current"
+        preload: false
+        watchChanges: true
+        printErrors: false
+        onFileChanged: backgroundSync.restart()
+    }
+    Timer {
+        id: backgroundSync
+        interval: 150
+        onTriggered: {
+            if (apply.running || sync.running) restart();
+            else sync.running = true;
+        }
+    }
+    Process {
+        id: sync
+        command: ["python3", root.sourceDirectory + "/scripts/lifecycle.py", "sync-background"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                try {
+                    var result = JSON.parse(text);
+                    if (result.mode) StartUI.Session.mode = result.mode;
+                } catch (error) { console.error("Eleven mode sync:", text); }
+            }
+        }
+    }
     Component.onDestruction: {
         if (StartUI.Session.owner === root) {
             StartUI.Session.library = null;
@@ -47,6 +76,12 @@ Item {
         command: ["python3", root.sourceDirectory + "/scripts/lifecycle.py", "activate", root.sourceDirectory]
         stdout: StdioCollector {
             id: result
+            onStreamFinished: {
+                try {
+                    var state = JSON.parse(text);
+                    if (state.mode) StartUI.Session.mode = state.mode;
+                } catch (error) { console.error("Eleven activation:", text); }
+            }
         }
         onExited: function (code) {
             if (code !== 0) {

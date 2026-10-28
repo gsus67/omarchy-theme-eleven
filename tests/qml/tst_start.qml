@@ -57,6 +57,16 @@ TestCase {
     function typeText(value) {
         for (var i = 0; i < value.length; i++) keyClick(value.charAt(i));
     }
+    function test_mode_switch_updates_existing_start_without_recreating_it() {
+        Session.mode = "dark";
+        compare(menu.color, "#242424");
+        compare(Appearance.color("#20252b"), "#f3f3f3");
+        verify(menu.symbol("power").toString().indexOf("/dark/power.svg") >= 0);
+        var entries = menu.allEntries.length;
+        Session.mode = "light";
+        compare(menu.color, "#e9edf1");
+        compare(menu.allEntries.length, entries);
+    }
     function test_inherited_pins_do_not_include_missing_apps() {
         compare(menu.pinnedApps[0].id, "chromium");
         compare(menu.pinnedApps.length, 3);

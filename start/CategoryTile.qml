@@ -14,7 +14,7 @@ ElevenButton {
             width: parent.width
             height: width
             radius: 9
-            color: tile.down ? "#dce5ef" : tile.hovered || tile.activeFocus ? "#f2f6fb" : "#ffffff"
+            color: tile.down ? Appearance.color("#dce5ef") : tile.hovered || tile.activeFocus ? Appearance.color("#f2f6fb") : Appearance.color("#ffffff")
             opacity: tile.hovered || tile.activeFocus ? 1 : 0.22
         }
         Rectangle {
@@ -23,7 +23,7 @@ ElevenButton {
             radius: 9
             color: "transparent"
             border.width: tile.activeFocus ? 2 : 1
-            border.color: tile.activeFocus ? "#0078d4" : "#d5dce3"
+            border.color: tile.activeFocus ? Appearance.color("#0078d4") : Appearance.color("#d5dce3")
         }
         Repeater {
             model: tile.group.preview
@@ -47,7 +47,7 @@ ElevenButton {
             height: 28
             text: tile.text
             textFormat: Text.PlainText
-            color: "#1b1b1b"
+            color: Appearance.color("#1b1b1b")
             font.family: "sans-serif"
             font.pixelSize: 12
             horizontalAlignment: Text.AlignHCenter

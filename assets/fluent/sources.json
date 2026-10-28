@@ -99,10 +99,108 @@
       "upstreamSha256": "c19ff922990add433c3d5ddc2fb9843b3e4d31c1074ef05295d46c4ec8f23c83",
       "sha256": "508856c1c66a88b19abaa461cf4f22986cd3a4563c266d0ada193cb581183e10",
       "modification": "Replace #212121/currentColor with #71808c; geometry unchanged."
+    },
+    {
+      "file": "dark/search.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Search/SVG/ic_fluent_search_24_regular.svg",
+      "upstreamSha256": "dc8ec761e8cdc52032b86e15c424716ded96d168970b5b611257253a41484b62",
+      "sha256": "2e4199813c4be245f5633ed4329a2e0e870f7723999474136dc7f46e1387beb4",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "dark/person.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Person/SVG/ic_fluent_person_24_filled.svg",
+      "upstreamSha256": "1840f06c141d14a9ce0cf5c25056037b58cef77cdb5b8ae216ae054375590380",
+      "sha256": "0a3f5a0e2b62bc45b89146d96243ce4129d4b96551817db9bfbedcf36cbb83ee",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "dark/power.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Power/SVG/ic_fluent_power_24_regular.svg",
+      "upstreamSha256": "370bb663ee39f2c327c1f615b1d2a5725803c5372867159a3f90067732265083",
+      "sha256": "46e12173958722d65e8958977d027a155d4e964ac8ad6000069312072582adb2",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "dark/document.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Document/SVG/ic_fluent_document_24_regular.svg",
+      "upstreamSha256": "c70164c6ee7f495a3bb4978de76628e166d6ba5b52210a016ddcfe35138528b1",
+      "sha256": "8ea508143021fb88841be84d120f5ebca798135ba7c319be49a946079f6d7019",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "dark/download.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Arrow%20Download/SVG/ic_fluent_arrow_download_24_regular.svg",
+      "upstreamSha256": "2749dfd0860188f7de7a573a634f3e37fe8ea4e99aa36fd1559e62d1a8243910",
+      "sha256": "a8826f5adb2160000f6cbea8029ee90b58db1f3a5061ff44ad2851026ee8c70b",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "dark/chevron-down.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Chevron%20Down/SVG/ic_fluent_chevron_down_16_regular.svg",
+      "upstreamSha256": "557155085ea09abe06bfe5f62a0f1c483b3bb5908f313cb480325b5a4a06487d",
+      "sha256": "e808b73568e55f21cd9182da2306e5641a5ead40bc27117ecddcbd8b029b2086",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "dark/lock.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Lock%20Closed/SVG/ic_fluent_lock_closed_24_regular.svg",
+      "upstreamSha256": "589e952219e9f3f018b33bebc9e2fe9ac8038cf2db5bc03350d5ff20a13dcd60",
+      "sha256": "263938212362b4d2d48e524c5a4e9f01794c5462ccfd061479c534ccc0aae607",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "dark/screensaver.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Desktop/SVG/ic_fluent_desktop_24_regular.svg",
+      "upstreamSha256": "320f7422cc8da3425d060c8c16e073c698209f2b970ade3c07b6553e1a52988d",
+      "sha256": "33dd30b1c7cffea69ffab6925dcff72d0bb1ef15fb9b194f386df4f1b6e80d6e",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "dark/suspend.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Weather%20Moon/SVG/ic_fluent_weather_moon_24_regular.svg",
+      "upstreamSha256": "7b8c77347c704ca3f76a5fed4865f9011caf4663d011850043067ca8ee490ee8",
+      "sha256": "c196d8a8e8fd002b7be77ee065236874ca2451ede6cd82f903fe128b460abf42",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "dark/hibernate.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Snooze/SVG/ic_fluent_snooze_24_regular.svg",
+      "upstreamSha256": "48b69c7973ffbe99bf95b82885f63763360d8a5355d77fe2828e08638b17611e",
+      "sha256": "4e16a4b3ab9f570d2b29f96303e854d9c185ed0b9b3a334742ae44a8040992fd",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "dark/logout.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Sign%20Out/SVG/ic_fluent_sign_out_24_regular.svg",
+      "upstreamSha256": "afa068599e0225204efc23250e25886e26b5173120b62bde43a27d275e7f05fc",
+      "sha256": "4b7f676932b325c290b9a14f3243119306d3fdcd1588eb71842e8b32741f1e4a",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "dark/restart.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Arrow%20Clockwise/SVG/ic_fluent_arrow_clockwise_24_regular.svg",
+      "upstreamSha256": "488566eef8203823292a19660c47d4b9c86ca64e6910848342e6b5fa3c5a7558",
+      "sha256": "1368616703554bc783cbee23be17003d7630cd98692a3b1a4008e95840f73ee5",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "dark/folder.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Folder/SVG/ic_fluent_folder_24_filled.svg",
+      "upstreamSha256": "6e695452d56425fc05d42fb3cadb8e7868097dcb20a3db4bb9c29bcb5354653b",
+      "sha256": "58bdb4fe03f74f73c081458a9429649350cf692910cc1473f4634be3bdc538b8",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "dark/settings.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Settings/SVG/ic_fluent_settings_24_filled.svg",
+      "upstreamSha256": "c19ff922990add433c3d5ddc2fb9843b3e4d31c1074ef05295d46c4ec8f23c83",
+      "sha256": "01c7b0e9aa27e6fc3521d458516b10eeb16edf593b174997a9aa1d4dfd0f0e5c",
+      "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
     }
   ],
   "noticeSha256": {
     "LICENSE": "69bc45dc42b9acb96a69823adbc6ae538374e3c0bde169b855b32c48eaaef52f",
-    "NOTICE": "2fb367a84df52c8b6f8401119708014b327f595554d41712d7407151c9ce73ef"
+    "NOTICE": "b3f920e8c99bf34c97b4661d4e34985e3dcf45cc2b494df74d396b0f18a70cb5"
   }
 }

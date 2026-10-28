@@ -15,7 +15,7 @@ ElevenButton {
             width: 10
             height: 10
             radius: 5
-            color: "#0078d4"
+            color: Appearance.color("#0078d4")
         }
         Image {
             id: symbol
@@ -37,7 +37,7 @@ ElevenButton {
                 width: parent.width
                 text: tile.text
                 textFormat: Text.PlainText
-                color: "#1b1b1b"
+                color: Appearance.color("#1b1b1b")
                 font.family: "sans-serif"
                 font.pixelSize: 12
                 elide: Text.ElideRight
@@ -46,7 +46,7 @@ ElevenButton {
                 width: parent.width
                 text: tile.detail
                 textFormat: Text.PlainText
-                color: "#64696e"
+                color: Appearance.color("#64696e")
                 font.family: "sans-serif"
                 font.pixelSize: 12
                 elide: Text.ElideRight

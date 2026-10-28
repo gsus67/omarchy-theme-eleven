@@ -1,0 +1,38 @@
+# Eleven — an original dark palette. MIT; see LICENSE.
+# Native Omarchy templates generate application themes from these values.
+mode = "dark"
+
+accent = "#60b8ff"
+selection = "#163f60"
+muted = "#adb7c5"
+
+background = "#202020"
+dark_background = "#191919"
+darker_background = "#141414"
+lighter_background = "#2d2d2d"
+
+foreground = "#f3f3f3"
+dark_foreground = "#b8c0cc"
+light_foreground = "#dce2ea"
+bright_foreground = "#ffffff"
+
+hyprland_active_border = "#4a7599"
+hyprland_inactive_border = "#3d434b"
+active_border_color = "#60b8ff"
+active_tab_background = "#163f60"
+
+red = "#ff998e"
+yellow = "#e8c36a"
+orange = "#ffb780"
+green = "#82d9a4"
+cyan = "#79d7df"
+blue = "#60b8ff"
+magenta = "#d9a0f7"
+brown = "#d8b193"
+
+bright_red = "#ffb4ab"
+bright_yellow = "#f2d68a"
+bright_green = "#99e9b8"
+bright_cyan = "#92e5ed"
+bright_blue = "#8acaff"
+bright_magenta = "#e2b5fa"

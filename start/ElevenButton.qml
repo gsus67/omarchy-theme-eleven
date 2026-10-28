@@ -14,15 +14,15 @@ AbstractButton {
     font.pixelSize: 13
     background: Rectangle {
         radius: 5
-        color: control.down ? "#d6eaff" : control.hovered || control.activeFocus ? "#e6edf6" : control.subtle ? "transparent" : "#ffffff"
-        border.color: control.activeFocus ? "#0067c0" : control.subtle ? "transparent" : "#d9e0e8"
+        color: control.down ? Appearance.color("#d6eaff") : control.hovered || control.activeFocus ? Appearance.color("#e6edf6") : control.subtle ? "transparent" : Appearance.color("#ffffff")
+        border.color: control.activeFocus ? Appearance.color("#0067c0") : control.subtle ? "transparent" : Appearance.color("#d9e0e8")
         border.width: control.activeFocus ? 2 : 1
     }
     contentItem: Text {
         id: label
         text: control.text
         textFormat: Text.PlainText
-        color: control.enabled ? "#1b1b1b" : "#626c78"
+        color: control.enabled ? Appearance.color("#1b1b1b") : Appearance.color("#626c78")
         font: control.font
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter

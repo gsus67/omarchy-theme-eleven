@@ -36,8 +36,8 @@ Rectangle {
     implicitWidth: 640
     implicitHeight: 726
     radius: 8
-    color: "#e9edf1"
-    border.color: "#c1c8cf"
+    color: Appearance.color("#e9edf1")
+    border.color: Appearance.color("#c1c8cf")
     clip: true
     onActiveFocusChanged: if (activeFocus)
         search.forceActiveFocus()
@@ -49,7 +49,7 @@ Rectangle {
         powerMenu.open();
     }
     function symbol(name) {
-        return Qt.resolvedUrl("../assets/fluent/" + name + ".svg");
+        return Qt.resolvedUrl("../assets/fluent/" + (Appearance.dark ? "dark/" : "") + name + ".svg");
     }
     function catalog(text) {
         var entries = library ? library.sortedEntries(text).map(function (row) {
@@ -137,15 +137,15 @@ Rectangle {
         placeholderText: root.t("Search for apps", "Buscar aplicaciones")
         font.family: "sans-serif"
         font.pixelSize: 13
-        color: "#20252b"
-        placeholderTextColor: "#7b838b"
+        color: Appearance.color("#20252b")
+        placeholderTextColor: Appearance.color("#7b838b")
         leftPadding: 43
         rightPadding: 16
         selectByMouse: true
         background: Rectangle {
-            color: "#f8fbfe"
+            color: Appearance.color("#f8fbfe")
             radius: height / 2
-            border.color: search.activeFocus ? "#cbd7e2" : "#d4dce4"
+            border.color: search.activeFocus ? Appearance.color("#cbd7e2") : Appearance.color("#d4dce4")
             Image {
                 anchors.left: parent.left
                 anchors.leftMargin: 13
@@ -198,7 +198,7 @@ Rectangle {
                     font.family: "sans-serif"
                     font.pixelSize: 14
                     font.weight: Font.DemiBold
-                    color: "#20252b"
+                    color: Appearance.color("#20252b")
                 }
                 ElevenButton {
                     visible: root.listMode
@@ -281,7 +281,7 @@ Rectangle {
                     horizontalAlignment: Text.AlignHCenter
                     font.family: "sans-serif"
                     font.pixelSize: 12
-                    color: "#64696e"
+                    color: Appearance.color("#64696e")
                 }
             }
 
@@ -300,7 +300,7 @@ Rectangle {
                 font.family: "sans-serif"
                 font.pixelSize: 14
                 font.weight: Font.DemiBold
-                color: "#20252b"
+                color: Appearance.color("#20252b")
             }
             GridLayout {
                 visible: !root.listMode
@@ -356,7 +356,7 @@ Rectangle {
                     font.family: "sans-serif"
                     font.pixelSize: 14
                     font.weight: Font.DemiBold
-                    color: "#20252b"
+                    color: Appearance.color("#20252b")
                 }
                 ElevenButton {
                     text: root.t("View: Category", "Vista: Categoría")
@@ -409,12 +409,12 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.margins: 1
         height: 64
-        color: "#e4e8ed"
+        color: Appearance.color("#e4e8ed")
         Rectangle {
             anchors.top: parent.top
             width: parent.width
             height: 1
-            color: "#d5dce3"
+            color: Appearance.color("#d5dce3")
         }
         RowLayout {
             anchors.fill: parent
@@ -432,7 +432,7 @@ Rectangle {
                         width: 32
                         height: 32
                         radius: 16
-                        color: "#f7f9fb"
+                        color: Appearance.color("#f7f9fb")
                         anchors.verticalCenter: parent.verticalCenter
                         Image {
                             anchors.centerIn: parent
@@ -446,7 +446,7 @@ Rectangle {
                         textFormat: Text.PlainText
                         font.family: "sans-serif"
                         font.pixelSize: 12
-                        color: "#20252b"
+                        color: Appearance.color("#20252b")
                         anchors.verticalCenter: parent.verticalCenter
                     }
                 }
@@ -474,8 +474,8 @@ Rectangle {
                 bottomPadding: 10
                 background: Rectangle {
                     radius: 4
-                    color: powerButton.down ? "#dde5ed" : powerButton.hovered ? "#eef2f6" : "transparent"
-                    border.color: powerButton.activeFocus ? "#0078d4" : "transparent"
+                    color: powerButton.down ? Appearance.color("#dde5ed") : powerButton.hovered ? Appearance.color("#eef2f6") : "transparent"
+                    border.color: powerButton.activeFocus ? Appearance.color("#0078d4") : "transparent"
                 }
                 ToolTip {
                     id: powerTip
@@ -489,13 +489,13 @@ Rectangle {
                     padding: 8
                     background: Rectangle {
                         radius: 4
-                        color: "#f4f7fa"
-                        border.color: "#d1d8df"
+                        color: Appearance.color("#f4f7fa")
+                        border.color: Appearance.color("#d1d8df")
                     }
                     contentItem: Text {
                         text: powerTip.text
                         textFormat: Text.PlainText
-                        color: "#20252b"
+                        color: Appearance.color("#20252b")
                         font.family: "sans-serif"
                         font.pixelSize: 12
                     }
@@ -514,8 +514,8 @@ Rectangle {
         padding: 4
         background: Rectangle {
             radius: 8
-            color: "#f4f7fa"
-            border.color: "#d1d8df"
+            color: Appearance.color("#f4f7fa")
+            border.color: Appearance.color("#d1d8df")
         }
         Repeater {
             model: Model.powerOptions(root.suspendAvailable, root.hibernateAvailable)
@@ -528,7 +528,7 @@ Rectangle {
                 onTriggered: root.systemActionRequested(modelData.id)
                 background: Rectangle {
                     radius: 4
-                    color: powerItem.highlighted ? "#e5ebf2" : "transparent"
+                    color: powerItem.highlighted ? Appearance.color("#e5ebf2") : "transparent"
                 }
                 contentItem: RowLayout {
                     spacing: 10
@@ -545,7 +545,7 @@ Rectangle {
                         textFormat: Text.PlainText
                         font.family: "sans-serif"
                         font.pixelSize: 13
-                        color: "#20252b"
+                        color: Appearance.color("#20252b")
                     }
                 }
             }

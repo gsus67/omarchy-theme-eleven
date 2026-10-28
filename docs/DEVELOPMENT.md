@@ -158,3 +158,27 @@ Preparación de v0.1.0: el registro pasó de 62 a 63 aplicaciones durante la
 comprobación, lo cual es un cambio legítimo. No usar un número fijo para probar
 estabilidad: comprobar disponibilidad y respeto de filtros, no una cantidad
 inmutable. Se autoriza publicación con rama, PR y todo verde antes de main.
+
+
+### Variante oscura mediante el selector nativo (rama local)
+
+`Ctrl+Super+Espacio` conserva su binding nativo `omarchy-menu toggle background`.
+Los dos PNG propios se preparan en backgrounds del tema administrado. Un
+FileView del directorio current con preload=false observa solo cambios de
+metadatos (incluida sustitución del enlace background). Tras un debounce de
+150 ms ejecuta sync-background; no carga el PNG, no sondea ni añade un daemon.
+La operación exige plugin habilitado, recibo activo, tema administrado actual
+y ruta resuelta idéntica a uno de sus dos fondos. Un fondo ajeno no cambia modo.
+
+El modo modifica la misma paleta administrada usando variants/dark cuando
+corresponde; el renderizado nativo sigue en headless, sin hooks, privilegios ni
+reinicios de aplicaciones. Session.mode y Appearance adaptan Inicio sin
+recrear el catálogo. Variantes Fluent claras para contraste oscuro mantienen
+licencia, geometría, procedencia y hashes. Las preferencias se fusionan para
+no perder anclados al guardar modo ni modo al guardar anclados.
+
+El recibo conserva la apariencia ORIGINAL anterior a la activación durante
+todos los cambios de modo. pendingMode/pendingAssets permiten recuperar una
+interrupción; un error de aplicación intenta volver al modo anterior. Al
+limpiar se eliminan solo recursos con hashes propios. No cargar controladores
+ni instalar paquetes para esta función. No publicada como nuevo release.

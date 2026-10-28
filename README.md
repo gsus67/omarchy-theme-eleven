@@ -1,6 +1,6 @@
 # Eleven para Omarchy
 
-Plugin que aplica un tema claro inspirado en Windows 11 y un menú Inicio, reutilizando Omarchy, Quickshell, Nautilus, fuentes e iconos instalados. Sin paquetes adicionales, privilegios elevados, servicios de sistema ni otro proceso residente.
+Plugin que aplica un tema claro u oscuro inspirado en Windows 11 y un menú Inicio, reutilizando Omarchy, Quickshell, Nautilus, fuentes e iconos instalados. Sin paquetes adicionales, privilegios elevados, servicios de sistema ni otro proceso residente.
 
 ## Activar y desactivar desde Tool
 
@@ -18,6 +18,21 @@ Las preferencias de Inicio están dentro de `.eleven/preferences.json`, ignorado
 Distribución ajustada al Windows que mostró el propietario: búsqueda redondeada con lupa, anclados, recomendaciones en dos columnas, categorías de aplicaciones y pie con avatar y encendido. El desplegable de energía contiene todas las acciones nativas de Omarchy; suspensión e hibernación aparecen solo cuando están disponibles. Anclar/desanclar usa el clic derecho y el catálogo sigue siendo el de Omarchy. Escape, flechas, Enter y Tab usan los controles Qt y el panel nativo. No registra documentos recientes ni usa otro indexador.
 
 El botón conserva el icono nativo de Omarchy en azul (`#0078d4`), un área de clic de 44 píxeles y un símbolo más grande, además del clic derecho para abrir la terminal; solo cambia el menú que abre al pulsarlo. Los iconos de aplicaciones son los instalados. Inicio se despliega debajo de la barra superior, con la barra encima; el panel nativo adapta el anclaje si la barra está en otra posición. No sustituye los menús internos de selección de Omarchy.
+
+## Claro y oscuro desde los fondos
+
+Con Eleven activo, **Ctrl+Super+Espacio** abre el selector de fondos nativo.
+El fondo **eleven-horizon.png** aplica la variante clara y
+**eleven-horizon-dark.png** la oscura. Cambian juntos Inicio, la paleta de las
+barras y la preferencia de apariencia de Nautilus/GTK. No modifica el atajo,
+Tool ni la posición de las barras. Los demás fondos conservan el modo actual;
+no se analiza su luminosidad.
+
+Se recuerda la última variante al volver a activar Eleven. Los anclados se
+conservan. Un aviso de cambios del directorio nativo dispara un ayudante breve
+solo cuando hay cambios; no hay sondeo periódico ni otro proceso residente.
+Al apagar o desinstalar se retira el observador junto al plugin y se restauran
+los ajustes anteriores cuando siguen siendo propios. No cierra Nautilus.
 
 ## Explorador y barras
 
@@ -74,7 +89,7 @@ En esa vista previa, los cambios de anclados solo duran hasta cerrarla. Los acce
 
 ## Licencia
 
-Código, paleta y fondo originales bajo [MIT](LICENSE). Los iconos de aplicaciones y las fuentes se reutilizan del sistema. Para los controles del menú se incluyen 14 SVG de Fluent System Icons de Microsoft, unos 12 KB en total, bajo MIT; su [licencia](assets/fluent/LICENSE), [avisos](assets/fluent/NOTICE) y [procedencia con revisión fija y hashes](assets/fluent/sources.json) se conservan en el repositorio. No contiene recursos extraídos de Windows, fuentes propietarias ni logotipos de Microsoft y no está afiliado a Microsoft. Los SVG solo se han recoloreado; no se han extraído iconos ni fuentes de Windows.
+Código, paleta y fondo originales bajo [MIT](LICENSE). Los iconos de aplicaciones y las fuentes se reutilizan del sistema. Para los controles del menú se incluyen 14 símbolos SVG de Fluent System Icons de Microsoft, con variantes de contraste para ambos modos, bajo MIT; su [licencia](assets/fluent/LICENSE), [avisos](assets/fluent/NOTICE) y [procedencia con revisión fija y hashes](assets/fluent/sources.json) se conservan en el repositorio. No contiene recursos extraídos de Windows, fuentes propietarias ni logotipos de Microsoft y no está afiliado a Microsoft. Los SVG solo se han recoloreado; no se han extraído iconos ni fuentes de Windows.
 
 ## Atajos compatibles
 

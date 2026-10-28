@@ -70,6 +70,7 @@ class LifecycleTest(unittest.TestCase):
             target = self.source / name
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, target)
+        shutil.copytree(ROOT / "variants", self.source / "variants")
         self.original = {"version": 1, "bar": {"position": "top", "transparent": True, "layout": {
             "left": [{"id": "omarchy.menu", "custom": "keep"}, {"id": "omarchy.workspaces"}],
             "center": [{"id": "omarchy.clock"}], "right": [{"id": "tool", "keep": 1}]}},
@@ -93,6 +94,80 @@ class LifecycleTest(unittest.TestCase):
         for section, rows in config["bar"]["layout"].items():
             config["bar"]["layout"][section] = [row for row in rows if row["id"] != life.PLUGIN]
         self.write(config)
+
+    def select_background(self, mode):
+        name = "eleven-horizon-dark.png" if mode == "dark" else "eleven-horizon.png"
+        self.native.image = str(self.paths.current / "theme/backgrounds" / name)
+        return self.manager.sync_background()
+
+    def test_wallpaper_switch_changes_native_and_gtk_palettes_and_keeps_pins(self):
+        self.manager.reconcile(self.source)
+        life.atomic_write(self.paths.preferences, b'{"pinnedApps":["chromium"]}')
+        for mode in ("dark", "light", "dark"):
+            self.assertEqual(self.select_background(mode)["mode"], mode)
+            self.assertIn('mode = "' + mode + '"', (self.paths.theme / "colors.toml").read_text())
+            self.assertEqual(self.native.settings["color-scheme"], "'prefer-" + mode + "'")
+            prefs = json.loads(self.paths.preferences.read_text())
+            self.assertEqual(prefs["pinnedApps"], ["chromium"])
+            self.assertEqual(prefs["appearanceMode"], mode)
+        self.disable()
+        self.manager.deactivate()
+        self.assertEqual(self.native.image, "/wallpapers/original.png")
+        self.assertEqual(self.native.settings, self.previous_settings)
+        self.assertFalse(self.paths.theme.exists())
+        self.enable()
+        self.manager.reconcile(self.source)
+        self.assertEqual(self.manager.load()["mode"], "dark")
+
+    def test_external_wallpaper_or_theme_does_not_switch_mode(self):
+        self.manager.reconcile(self.source)
+        calls = list(self.native.calls)
+        self.native.image = "/external/eleven-horizon-dark.png"
+        self.assertFalse(self.manager.sync_background()["changed"])
+        self.native.selected = "other-theme"
+        self.select_background("dark")
+        self.assertEqual(self.native.calls, calls)
+
+    def test_repeated_background_notifications_do_not_reapply_theme(self):
+        self.manager.reconcile(self.source)
+        self.select_background("dark")
+        calls = list(self.native.calls)
+        self.assertFalse(self.select_background("dark")["changed"])
+        self.assertEqual(self.native.calls, calls)
+
+    def test_failed_mode_change_rolls_back_without_losing_original_snapshot(self):
+        self.manager.reconcile(self.source)
+        self.native.fail = True
+        with self.assertRaises(RuntimeError):
+            self.select_background("dark")
+        self.assertEqual(self.manager.load()["mode"], "light")
+        self.assertIn('mode = "light"', (self.paths.theme / "colors.toml").read_text())
+        self.disable()
+        self.manager.deactivate()
+        self.assertEqual(self.native.image, "/wallpapers/original.png")
+        self.assertEqual(self.native.settings, self.previous_settings)
+
+    def test_active_upgrade_adds_dark_background_preserving_external_wallpaper(self):
+        self.manager.reconcile(self.source)
+        receipt = self.manager.load()
+        relative = "backgrounds/eleven-horizon-dark.png"
+        (self.paths.theme / relative).unlink()
+        receipt["assets"].pop(relative)
+        self.manager.save(receipt)
+        self.native.image = "/external/custom.png"
+        self.manager.reconcile(self.source)
+        self.assertTrue((self.paths.theme / relative).is_file())
+        self.assertEqual(self.native.image, "/external/custom.png")
+
+    def test_pending_mode_recovers_previous_mode_after_restart(self):
+        self.manager.reconcile(self.source)
+        receipt = self.manager.load()
+        receipt["pendingMode"] = "dark"
+        self.manager.stage_assets(receipt, "dark")
+        self.manager.save(receipt)
+        self.manager.reconcile(self.source)
+        self.assertIn('mode = "light"', (self.paths.theme / "colors.toml").read_text())
+        self.assertNotIn("pendingMode", self.manager.load())
 
     def test_activation_replaces_only_start_preserving_bar_and_taskbar(self):
         self.manager.reconcile(self.source)
@@ -248,6 +323,7 @@ class LifecycleTest(unittest.TestCase):
         protected = outside / original.name
         shutil.copyfile(original, protected)
         original.unlink()
+        (original.parent / "eleven-horizon-dark.png").unlink()
         original.parent.rmdir()
         original.parent.symlink_to(outside, target_is_directory=True)
         self.disable()

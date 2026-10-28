@@ -15,6 +15,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--capture", type=Path, help="Render a PNG offscreen and exit")
     parser.add_argument("--power-menu", action="store_true", help="Show the inert power flyout for visual review")
+    parser.add_argument("--dark", action="store_true", help="Preview the dark variant")
     args = parser.parse_args()
     native = Path(os.environ.get("OMARCHY_PATH", "/usr/share/omarchy")) / "shell"
     if not native.is_dir() or not shutil.which("quickshell"):
@@ -40,6 +41,7 @@ ShellRoot {
     property bool powerPreview: POWER_PREVIEW
     property bool captured: false
     Component.onCompleted: {
+        Session.mode = DARK_MODE ? "dark" : "light";
         // Compile the actual host entry points, without constructing their
         // side-effecting lifecycle service or layer-shell popup.
         for (var path of (root.output === "" ? ["plugin/start/Start.qml", "plugin/Lifecycle.qml"] : ["plugin/Lifecycle.qml"])) {
@@ -103,7 +105,7 @@ ShellRoot {
         onTriggered: { console.error("Capture timed out"); Qt.exit(1); }
     }
 }
-'''.replace("OUTPUT", json.dumps(capture)).replace("POWER_PREVIEW", "true" if args.power_menu else "false")
+'''.replace("OUTPUT", json.dumps(capture)).replace("POWER_PREVIEW", "true" if args.power_menu else "false").replace("DARK_MODE", "true" if args.dark else "false")
         (base / "shell.qml").write_text(qml)
         env = dict(os.environ, QT_QUICK_CONTROLS_STYLE="Basic")
         if capture:

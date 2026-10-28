@@ -17,7 +17,7 @@ import time
 PLUGIN = "io.github.gsus67.omarchy-theme-eleven"
 THEME = "eleven-managed"
 SCHEMA = "org.gnome.desktop.interface"
-ASSETS = ["colors.toml", "icons.theme", "backgrounds/eleven-horizon.png"]
+ASSETS = ["colors.toml", "icons.theme", "backgrounds/eleven-horizon.png", "backgrounds/eleven-horizon-dark.png"]
 ASSETS += [f"shell.{part}.toml" for part in (
     "bar", "controls", "font", "launcher", "lock", "menu", "notifications", "popups", "tooltip")]
 
@@ -251,6 +251,85 @@ class Manager:
             return
         raise RuntimeError("Shell settings are changing; retry activation")
 
+    def preferences(self, source):
+        path = Path(source) / ".eleven/preferences.json"
+        if path.parent.is_symlink() or path.is_symlink():
+            raise RuntimeError("Preferences must stay inside the installed plugin")
+        return json.loads(path.read_text()) if path.is_file() else {}
+
+    def remember_mode(self, source, mode):
+        preferences = self.preferences(source)
+        preferences["appearanceMode"] = mode
+        atomic_write(Path(source) / ".eleven/preferences.json",
+                     (json.dumps(preferences) + "\n").encode())
+
+    def stage_assets(self, receipt, mode):
+        source = Path(receipt["source"])
+        resources = []
+        for relative in ASSETS:
+            variant = ("variants/dark/" if mode == "dark" and
+                       (relative == "colors.toml" or relative.startswith("shell.")) else "")
+            origin = source / (variant + relative)
+            target = self.paths.theme / relative
+            if not plain_asset(source, variant + relative) or not origin.is_file():
+                raise RuntimeError(f"Invalid theme resource: {relative}")
+            if not plain_asset(self.paths.theme, relative) or (target.exists() and
+                    digest(target) not in (receipt["assets"].get(relative), receipt.get("pendingAssets", {}).get(relative))):
+                raise RuntimeError(f"Theme resource was changed by the user: {relative}")
+            resources.append((relative, origin, target))
+        for relative, origin, target in resources:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            receipt.setdefault("pendingAssets", {})[relative] = digest(origin)
+            self.save(receipt)
+            atomic_write(target, origin.read_bytes())
+            receipt["assets"][relative] = receipt["pendingAssets"].pop(relative)
+            self.save(receipt)
+
+    def apply_mode(self, receipt, mode):
+        self.stage_assets(receipt, mode)
+        receipt["managedSettings"] = {"color-scheme": "'prefer-dark'" if mode == "dark" else "'prefer-light'",
+                                      "gtk-theme": "'Adwaita-dark'" if mode == "dark" else "'Adwaita'"}
+        if Path("/usr/share/icons/Yaru-blue/index.theme").is_file():
+            receipt["managedSettings"]["icon-theme"] = "'Yaru-blue'"
+        self.save(receipt)
+        self.native.apply_theme(THEME)
+        for key, value in receipt["managedSettings"].items():
+            self.native.set(key, value)
+        filename = "eleven-horizon-dark.png" if mode == "dark" else "eleven-horizon.png"
+        receipt["managedBackground"] = str(self.paths.current / "theme/backgrounds" / filename)
+        self.save(receipt)
+        self.native.set_background(receipt["managedBackground"])
+        receipt["mode"] = mode
+        receipt.pop("pendingMode", None)
+        self.save(receipt)
+
+    def sync_background(self):
+        receipt = self.load()
+        if not receipt or not receipt.get("active") or not enabled(self.config()):
+            return {"active": False}
+        previous = receipt.get("mode", "light")
+        if self.native.theme() != THEME:
+            return {"mode": previous, "changed": False}
+        selected = Path(self.native.background()).resolve()
+        modes = {"eleven-horizon.png": "light", "eleven-horizon-dark.png": "dark"}
+        mode = next((value for name, value in modes.items() if selected ==
+                     (self.paths.current / "theme/backgrounds" / name).resolve()), None)
+        if mode is None:
+            return {"mode": previous, "changed": False}
+        if mode != previous:
+            receipt["pendingMode"] = mode
+            self.save(receipt)
+            try:
+                self.apply_mode(receipt, mode)
+            except Exception:
+                self.apply_mode(receipt, previous)
+                raise
+        else:
+            receipt["managedBackground"] = self.native.background()
+            self.save(receipt)
+        self.remember_mode(receipt["source"], mode)
+        return {"active": True, "mode": mode, "changed": mode != previous}
+
     def reconcile(self, source):
         try:
             return self.activate(source)
@@ -271,8 +350,15 @@ class Manager:
             atomic_write(self.paths.helper, Path(__file__).read_bytes())
             receipt["shortcuts"] = self.native.install_shortcuts(source)
             self.save(receipt)
+            if self.native.theme() == THEME and (receipt.get("pendingMode") or
+                    any(relative not in receipt["assets"] for relative in ASSETS)):
+                background = self.native.background()
+                owned = background == receipt.get("managedBackground")
+                self.apply_mode(receipt, receipt.get("mode", "light"))
+                if not owned and background:
+                    self.native.set_background(background)
             # Hot reload/login must not undo a theme the user selected later.
-            return {"active": True, "theme": self.native.theme()}
+            return {"active": True, "theme": self.native.theme(), "mode": receipt.get("mode", "light")}
         if receipt is None:
             if self.paths.theme.exists() or self.paths.theme.is_symlink():
                 raise RuntimeError("The managed theme path already exists; nothing was overwritten")
@@ -301,30 +387,12 @@ class Manager:
         if self.paths.theme.is_symlink():
             raise RuntimeError("Managed theme directory became a symlink")
         self.paths.theme.mkdir(parents=True, exist_ok=True)
-        for relative in ASSETS:
-            origin = source / relative
-            target = self.paths.theme / relative
-            if not plain_asset(source, relative) or not origin.is_file():
-                raise RuntimeError(f"Invalid theme resource: {relative}")
-            if not plain_asset(self.paths.theme, relative) or (target.exists() and receipt["assets"].get(relative) != digest(target)):
-                raise RuntimeError(f"Theme resource was changed by the user: {relative}")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            receipt["assets"][relative] = digest(origin)
-            self.save(receipt)
-            atomic_write(target, origin.read_bytes())
         atomic_write(self.paths.helper, Path(__file__).read_bytes())
         receipt["phase"] = "applying"
         self.save(receipt)
-        self.native.apply_theme(THEME)
-        receipt["managedSettings"] = {"color-scheme": "'prefer-light'", "gtk-theme": "'Adwaita'"}
-        if Path("/usr/share/icons/Yaru-blue/index.theme").is_file():
-            receipt["managedSettings"]["icon-theme"] = "'Yaru-blue'"
-        self.save(receipt)
-        for key, value in receipt["managedSettings"].items():
-            self.native.set(key, value)
-        receipt["managedBackground"] = str(self.paths.current / "theme/backgrounds/eleven-horizon.png")
-        self.save(receipt)
-        self.native.set_background(receipt["managedBackground"])
+        mode = self.preferences(source).get("appearanceMode", "light")
+        mode = mode if mode in ("light", "dark") else "light"
+        self.apply_mode(receipt, mode)
 
         def replace_start(config):
             own = next((copy.deepcopy(e) for _, _, e in entries(config) if e.get("id") == PLUGIN), None)
@@ -341,7 +409,7 @@ class Manager:
         receipt["shortcuts"] = self.native.install_shortcuts(source)
         receipt.update(active=True, phase="active")
         self.save(receipt)
-        return {"active": True, "theme": THEME}
+        return {"active": True, "theme": THEME, "mode": receipt.get("mode", "light")}
 
     def deactivate(self, *, uninstall=False, force=False):
         receipt = self.load()
@@ -384,7 +452,7 @@ class Manager:
             raise RuntimeError("Managed theme is still selected; its resources were preserved")
         for relative in ASSETS:
             target = self.paths.theme / relative
-            if plain_asset(self.paths.theme, relative) and target.is_file() and receipt["assets"].get(relative) == digest(target):
+            if plain_asset(self.paths.theme, relative) and target.is_file() and digest(target) in (receipt["assets"].get(relative), receipt.get("pendingAssets", {}).get(relative)):
                 target.unlink()
         for directory in (self.paths.theme / "backgrounds", self.paths.theme):
             if directory.is_dir() and not directory.is_symlink() and not any(directory.iterdir()):
@@ -415,14 +483,14 @@ def locked(paths):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("operation", choices=("activate", "cleanup", "pins", "power-options", "shortcuts"))
+    parser.add_argument("operation", choices=("activate", "cleanup", "pins", "power-options", "shortcuts", "sync-background"))
     parser.add_argument("value", nargs="?", default="")
     args = parser.parse_args()
     if args.operation == "power-options":
         print(json.dumps(power_options()))
         return
     if not args.value:
-        if args.operation != "shortcuts":
+        if args.operation not in ("shortcuts", "sync-background"):
             parser.error("This operation requires a value")
     paths = Paths(Path.home(), os.environ.get("XDG_CONFIG_HOME"), os.environ.get("XDG_STATE_HOME"))
     if args.operation == "cleanup":
@@ -440,6 +508,8 @@ def main():
             result = manager.deactivate(uninstall=not Path(args.value).is_dir())
             if not result.get("reload"):
                 notify("Eleven desinstalado" if result.get("uninstalled") else "Eleven desactivado")
+        elif args.operation == "sync-background":
+            result = manager.sync_background()
         elif args.operation == "shortcuts":
             receipt = manager.load()
             if receipt and enabled(manager.config()):
@@ -457,7 +527,9 @@ def main():
                 not isinstance(value, str) or not value or len(value) > 512
                 or re.search(r"[\x00-\x1f\x7f-\x9f]", value) for value in pins):
                 raise ValueError("Invalid pinned applications")
-            atomic_write(paths.preferences, (json.dumps({"pinnedApps": list(dict.fromkeys(pins))}) + "\n").encode())
+            preferences = manager.preferences(paths.preferences.parents[1])
+            preferences["pinnedApps"] = list(dict.fromkeys(pins))
+            atomic_write(paths.preferences, (json.dumps(preferences) + "\n").encode())
             result = {"saved": True}
         print(json.dumps(result))
 

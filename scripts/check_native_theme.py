@@ -29,7 +29,10 @@ def main():
                    "--unsetenv", "DBUS_SESSION_BUS_ADDRESS", "--setenv", "XDG_RUNTIME_DIR", "/tmp/runtime",
                    "--setenv", "OMARCHY_PATH", "/usr/share/omarchy", "--setenv", "OMARCHY_THEME_HEADLESS", "1",
                    "--setenv", "OMARCHY_THEME_SKIP_BACKGROUND", "1"]
-        for name in ("eleven-managed", "tokyo-night"):
+        for name, mode in (("eleven-managed", "light"), ("eleven-managed", "dark"), ("tokyo-night", "dark")):
+            if name == "eleven-managed" and mode == "dark":
+                for origin in (ROOT / "variants/dark").glob("*.toml"):
+                    shutil.copyfile(origin, theme / origin.name)
             result = subprocess.run([*command, "omarchy", "theme", "set", name],
                                     capture_output=True, text=True, timeout=45)
             if result.returncode:
@@ -38,7 +41,7 @@ def main():
             assert (current / "theme.name").read_text().strip() == name
             assert (current / "theme/colors.toml").is_file()
             assert (current / "theme/shell.toml").is_file()
-        print("OK: native staging of Eleven and restoration of Tokyo Night in an isolated home")
+        print("OK: native light/dark staging and restoration of Tokyo Night in an isolated home")
 
 
 if __name__ == "__main__":

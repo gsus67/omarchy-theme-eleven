@@ -9,8 +9,8 @@ ElevenButton {
     subtle: true
     background: Rectangle {
         radius: 5
-        color: tile.down ? "#d9e3ef" : tile.hovered || tile.selected ? "#f5f8fc" : "transparent"
-        border.color: tile.keyboardSelected ? "#0078d4" : "transparent"
+        color: tile.down ? Appearance.color("#d9e3ef") : tile.hovered || tile.selected ? Appearance.color("#f5f8fc") : "transparent"
+        border.color: tile.keyboardSelected ? Appearance.color("#0078d4") : "transparent"
         border.width: 2
     }
     contentItem: Item {
@@ -32,7 +32,7 @@ ElevenButton {
             height: tile.wide ? parent.height : 32
             text: tile.text
             textFormat: Text.PlainText
-            color: "#1b1b1b"
+            color: Appearance.color("#1b1b1b")
             font.family: "sans-serif"
             font.pixelSize: 12
             horizontalAlignment: tile.wide ? Text.AlignLeft : Text.AlignHCenter

@@ -24,7 +24,7 @@ class IconAssetsTest(unittest.TestCase):
         self.assertIn("Copyright (c) 2020 Microsoft Corporation", (ROOT / "LICENSE").read_text())
 
     def test_svg_assets_have_no_executable_or_external_content(self):
-        for path in ROOT.glob("*.svg"):
+        for path in ROOT.rglob("*.svg"):
             with self.subTest(icon=path.name):
                 for element in ET.parse(path).iter():
                     self.assertIn(element.tag.rsplit("}", 1)[-1], ("svg", "path", "g", "defs", "clipPath", "rect", "circle"))

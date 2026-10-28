@@ -1,0 +1,9 @@
+# Native shell and existing Taskbar share these tokens. No replacement bar.
+[bar]
+background = "#202020"
+background-alpha = 1.0
+text = "#f3f3f3"
+active = "#ff998e"
+scale-with-font = false
+size-horizontal = 40
+size-vertical = 40
