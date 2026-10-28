@@ -78,8 +78,8 @@ Item {
         color: Local.Appearance.color("#f4f7fa")
         screen: root.targetScreen
         visible: false
-        implicitWidth: 1080
-        implicitHeight: 840
+        width: 1080
+        height: 840
         minimumSize: Qt.size(880, 620)
 
         onVisibleChanged: {
