@@ -55,6 +55,17 @@ Item {
             var selector = "title:" + window.title
             console.info("Eleven Settings: floating window", selector)
             Quickshell.execDetached(["hyprctl", "dispatch", 'hl.dsp.window.float({action="set",window="' + selector + '"})'])
+            sizeWindowTimer.restart()
+        }
+    }
+
+    Timer {
+        id: sizeWindowTimer
+        interval: 100
+        repeat: false
+        onTriggered: {
+            var selector = "title:" + window.title
+            Quickshell.execDetached(["hyprctl", "dispatch", 'hl.dsp.window.resize({x=1080,y=840,window="' + selector + '"})'])
             Quickshell.execDetached(["hyprctl", "dispatch", 'hl.dsp.window.center({window="' + selector + '"})'])
         }
     }
@@ -78,8 +89,8 @@ Item {
         color: Local.Appearance.color("#f4f7fa")
         screen: root.targetScreen
         visible: false
-        width: 1080
-        height: 840
+        implicitWidth: 1080
+        implicitHeight: 840
         minimumSize: Qt.size(880, 620)
 
         onVisibleChanged: {
