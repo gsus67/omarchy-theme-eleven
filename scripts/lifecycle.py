@@ -259,6 +259,8 @@ class Manager:
 
     def remember_mode(self, source, mode):
         preferences = self.preferences(source)
+        if preferences.get("appearanceMode") == mode:
+            return
         preferences["appearanceMode"] = mode
         atomic_write(Path(source) / ".eleven/preferences.json",
                      (json.dumps(preferences) + "\n").encode())
