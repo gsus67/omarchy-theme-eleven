@@ -15,13 +15,13 @@ Las preferencias de Inicio están dentro de `.eleven/preferences.json`, ignorado
 
 ## Menú Inicio
 
-Distribución ajustada al Windows que mostró el propietario: búsqueda redondeada con lupa, anclados, recomendaciones en dos columnas, categorías de aplicaciones y pie con avatar y encendido. El desplegable de energía contiene todas las acciones nativas de Omarchy; suspensión e hibernación aparecen solo cuando están disponibles. Anclar/desanclar usa el clic derecho y el catálogo sigue siendo el de Omarchy. Escape, flechas, Enter y Tab usan los controles Qt y el panel nativo. No registra documentos recientes ni usa otro indexador.
+Menú inspirado en Windows 11: búsqueda redondeada con lupa, anclados, recomendaciones en dos columnas, categorías de aplicaciones y pie con avatar y encendido. El desplegable de energía contiene todas las acciones nativas de Omarchy; suspensión e hibernación aparecen solo cuando están disponibles. Anclar/desanclar usa el clic derecho y el catálogo sigue siendo el de Omarchy. Escape, flechas, Enter y Tab usan los controles Qt y el panel nativo. No registra documentos recientes ni usa otro indexador.
 
 El botón conserva el icono nativo de Omarchy en azul (`#0078d4`), un área de clic de 44 píxeles y un símbolo más grande, además del clic derecho para abrir la terminal; solo cambia el menú que abre al pulsarlo. Los iconos de aplicaciones son los instalados. Inicio se despliega debajo de la barra superior, con la barra encima; el panel nativo adapta el anclaje si la barra está en otra posición. No sustituye los menús internos de selección de Omarchy.
 
 ## Explorador y barras
 
-Nautilus sigue siendo el explorador. Esta etapa aplica el modo claro y los iconos mediante los ajustes GNOME existentes; no parchea GTK ni instala otro explorador. «Este equipo» se reutiliza desde «Discos en mosaicos» de Tool, sin activarlo ni duplicar su extensión desde Eleven.
+Nautilus sigue siendo el explorador. Eleven aplica el modo claro y los iconos mediante los ajustes GNOME existentes; no parchea GTK ni instala otro explorador. «Este equipo» se reutiliza desde «Discos en mosaicos» de Tool, sin activarlo ni duplicar su extensión desde Eleven.
 
 Taskbar hereda el estilo de la barra nativa. Este proyecto no modifica su código, sus anclados ni sus opciones. Se conservan las posiciones y la preferencia de transparencia; no se reemplaza ninguna barra.
 
@@ -51,9 +51,9 @@ La copia temporal del tema es `~/.config/omarchy/themes/eleven-managed`; el reci
 
 La integración está desarrollada contra Omarchy 4.0.6. Si no puede registrar la apariencia anterior o la versión carece del renderizado seguro, cancela la activación. Los componentes QML se ejecutan en el mismo proceso de la shell, como cualquier plugin de Omarchy.
 
-## Estado y comprobaciones
+## Desarrollo y pruebas
 
-El menú está implementado y renderizado con el catálogo real de aplicaciones; existen pruebas de comportamiento y de limpieza. La comprobación nativa del tema se ejecuta con la carpeta personal real oculta en bubblewrap, sin acceso a la sesión ni a la red. Véase [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) para el estado de la instalación y el traspaso a Claude.
+Las pruebas cubren el menú, la activación y la retirada de los cambios. La comprobación nativa del tema usa un entorno aislado. Consulta [la documentación de desarrollo](docs/DEVELOPMENT.md) para más información.
 
 ```sh
 python3 scripts/check_theme.py
@@ -81,21 +81,20 @@ Código, paleta y fondo originales bajo [MIT](LICENSE). Los iconos de aplicacion
 Mientras Eleven está activo, registra en tiempo de ejecución únicamente las
 combinaciones libres: Windows/Super izquierda o derecha para Inicio, Ctrl+Esc,
 Win+E (explorador), Win+R (aplicaciones), Win+I (configuración), Win+S (búsqueda)
-y Win+L (bloquear). Las ocupadas se omiten: en la máquina de desarrollo Win+E
-ya abre archivos y Win+L cambia la distribución, y ambos se conservan.
+y Win+L (bloquear). Las combinaciones que ya están asignadas se conservan.
 
 No modifica los archivos de Hyprland ni registra pulsaciones. Usa bindings
 nativos; tras una recarga de configuración vuelve a comprobar los conflictos.
 Al apagar o desinstalar retira sus referencias. Si el usuario añade después
 otra acción con la misma combinación, se desactiva únicamente el handle propio
 para conservar la nueva; ese registro inerte desaparece en la siguiente
-recarga del compositor. No se ejecutan comandos de apagado durante las pruebas.
+recarga del compositor.
 
 ## Versión y compatibilidad
 
-La primera versión es v0.1.0. Probada en Omarchy 4.0.6, Hyprland 0.56.2 y
-Quickshell/Qt 6.12. La apariencia se inspira en la VM Windows del propietario;
-las aplicaciones y las funciones de Linux siguen siendo las instaladas.
+Compatible con Omarchy 4.0.6, Hyprland 0.56.2, Quickshell 0.3.2 y Qt 6.12.
+La apariencia se inspira en Windows 11 y utiliza las aplicaciones y funciones
+del sistema.
 
 Los archivos temporales de la apariencia solo existen mientras está activo.
 Al desinstalar se pierden las preferencias internas de Inicio, como ocurre
