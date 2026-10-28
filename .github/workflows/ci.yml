@@ -1,0 +1,74 @@
+name: Theme checks
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "37 7 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  theme:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Validate declarative resources
+        run: python3 scripts/check_theme.py
+      - name: Whitespace errors
+        run: git show --format= --check HEAD
+
+  workflow-security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Audit workflows
+        run: pipx run --spec zizmor==1.31.1 zizmor .github/workflows
+
+  behavior:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    container: archlinux:latest
+    steps:
+      - name: Install tools in the disposable CI container
+        run: pacman -Syu --noconfirm --needed python nodejs lua qt6-declarative qt6-svg git
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Lifecycle, cleanup and model tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Real QML input, search, navigation and layout
+        env:
+          QT_QPA_PLATFORM: offscreen
+          QT_QPA_PLATFORMTHEME: ""
+          QT_QUICK_CONTROLS_STYLE: Basic
+          QT_QUICK_BACKEND: software
+        run: /usr/lib/qt6/bin/qmltestrunner -input tests/qml
+
+  codeql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [actions, python, javascript-typescript]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: github/codeql-action/init@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+          queries: security-extended
+      - uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1

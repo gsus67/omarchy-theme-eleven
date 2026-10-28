@@ -1,0 +1,8 @@
+[notifications]
+background = "#f9fbff"
+background-alpha = 1.0
+text = "#1b1b1b"
+border = "#c8d2df"
+border-alpha = 1.0
+border-width = 1
+countdown = "#0067c0"

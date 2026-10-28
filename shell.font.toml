@@ -1,0 +1,3 @@
+# Preserve the installed font family and fontconfig configuration.
+[font]
+base-size = 13

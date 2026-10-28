@@ -1,0 +1,9 @@
+singleton Session 1.0 Session.qml
+Start 1.0 Start.qml
+StartContent 1.0 StartContent.qml
+ElevenButton 1.0 ElevenButton.qml
+AppTile 1.0 AppTile.qml
+CategoryTile 1.0 CategoryTile.qml
+RecommendationTile 1.0 RecommendationTile.qml
+MenuBridge 1.0 MenuBridge.qml
+AppCatalog 1.0 AppCatalog.qml

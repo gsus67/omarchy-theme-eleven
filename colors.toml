@@ -1,0 +1,38 @@
+# Eleven — an original light palette. MIT; see LICENSE.
+# Native Omarchy templates generate application themes from these values.
+mode = "light"
+
+accent = "#0067c0"
+selection = "#d6eaff"
+muted = "#626c78"
+
+background = "#f3f3f3"
+dark_background = "#e9edf3"
+darker_background = "#dde4ee"
+lighter_background = "#ffffff"
+
+foreground = "#1b1b1b"
+dark_foreground = "#5b6470"
+light_foreground = "#343c47"
+bright_foreground = "#111827"
+
+hyprland_active_border = "#8caed0"
+hyprland_inactive_border = "#d2d7df"
+active_border_color = "#0067c0"
+active_tab_background = "#d6eaff"
+
+red = "#b42318"
+yellow = "#805b00"
+orange = "#a9460b"
+green = "#14733b"
+cyan = "#006b76"
+blue = "#0067c0"
+magenta = "#8344a5"
+brown = "#775338"
+
+bright_red = "#c42b1c"
+bright_yellow = "#8a6500"
+bright_green = "#117d3e"
+bright_cyan = "#007884"
+bright_blue = "#005fb8"
+bright_magenta = "#8c42ab"

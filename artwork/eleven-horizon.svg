@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3840" height="2160" viewBox="0 0 3840 2160">
+  <title>Eleven Horizon</title>
+  <desc>Original blue ribbon landscape by the omarchy-theme-eleven contributors. MIT licensed.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#eef6ff"/>
+      <stop offset=".48" stop-color="#d5e9ff"/>
+      <stop offset="1" stop-color="#9bc7f5"/>
+    </linearGradient>
+    <linearGradient id="back" x1="0" y1="0" x2=".8" y2="1">
+      <stop stop-color="#78b6f3"/>
+      <stop offset=".55" stop-color="#3688d8"/>
+      <stop offset="1" stop-color="#1262b5"/>
+    </linearGradient>
+    <linearGradient id="ridge" x1=".1" y1="0" x2=".7" y2="1">
+      <stop stop-color="#c3e4ff"/>
+      <stop offset=".16" stop-color="#82c1fa"/>
+      <stop offset=".48" stop-color="#2e8de5"/>
+      <stop offset="1" stop-color="#1256a4"/>
+    </linearGradient>
+    <linearGradient id="fold" x1="0" y1=".2" x2="1" y2=".8">
+      <stop stop-color="#063e85"/>
+      <stop offset=".48" stop-color="#1267bd"/>
+      <stop offset="1" stop-color="#62b6fa"/>
+    </linearGradient>
+    <linearGradient id="edge" x1=".4" y1="0" x2=".7" y2="1">
+      <stop stop-color="#d8efff"/>
+      <stop offset=".24" stop-color="#70baff"/>
+      <stop offset="1" stop-color="#1269ba"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h3840v2160H0z"/>
+  <path fill="url(#back)" d="M-150 2220C450 1420 1140 1500 1640 1050C2160 580 2260 320 2840 470C3280 582 3480 1090 3990 1190V2250Z"/>
+  <path fill="url(#ridge)" d="M330 2230C1090 1880 1320 1510 1670 1080C1990 690 2250 480 2550 590C2050 700 2130 1270 1760 1610C1490 1855 1240 2020 1140 2230Z"/>
+  <path fill="url(#fold)" d="M2550 590C2910 620 2650 1250 2970 1510C3220 1710 3610 1610 3950 1530V2250H1120C1520 1990 1940 1860 2110 1550C2370 1070 2220 710 2550 590Z"/>
+  <path fill="url(#edge)" d="M1120 2250C1630 2060 2020 1920 2280 1730C2630 1470 2410 970 2690 720C2500 1090 2830 1440 2530 1830C2400 2000 2140 2150 1930 2250Z"/>
+</svg>
