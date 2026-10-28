@@ -9,13 +9,15 @@
   "kinds": [
     "bar-widget",
     "menu",
-    "service"
+    "service",
+    "panel"
   ],
   "keepLoaded": true,
   "entryPoints": {
     "barWidget": "start/Start.qml",
     "menu": "start/MenuBridge.qml",
-    "service": "Lifecycle.qml"
+    "service": "Lifecycle.qml",
+    "panel": "start/SettingsWindow.qml"
   },
   "barWidget": {
     "displayName": "Eleven Start",

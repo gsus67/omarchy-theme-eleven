@@ -24,6 +24,11 @@ Panel {
     implicitWidth: startButton.implicitWidth
     implicitHeight: startButton.implicitHeight
 
+    function showSettings(): void {
+        root.close();
+        Quickshell.execDetached(["omarchy-shell", "shell", "summon", root.moduleName, '{"view":"settings"}']);
+    }
+
     IpcHandler {
         target: root.ipcTarget
         function open(): void {
@@ -34,6 +39,9 @@ Panel {
         }
         function toggle(): void {
             root.toggle();
+        }
+        function openSettings(): void {
+            root.showSettings();
         }
         function status(): string {
             return JSON.stringify({
@@ -188,10 +196,10 @@ Panel {
                     Quickshell.execDetached(commands[action]);
                 }
                 onSettingsRequested: {
-                    root.close();
-                    Quickshell.execDetached(["omarchy-shell", "shell", "summon", "omarchy.menu", '{"menu":"setup"}']);
+                    root.showSettings();
                 }
             }
         }
     }
+
 }

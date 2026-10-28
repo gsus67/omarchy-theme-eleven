@@ -70,6 +70,36 @@ El propietario autorizó después publicar el repositorio y un release. No
 modificar otra máquina sin una instrucción correspondiente. Al publicar: rama, PR y todos
 los controles verdes antes de main, tal como pidió para Taskbar.
 
+## Ventana de Configuración Eleven (trabajo local, sin publicar)
+
+Inicio abre una ventana propia de Quickshell (`start/SettingsWindow.qml`) con
+barra de título, minimizar/maximizar/cerrar, navegación lateral, búsqueda global
+y tarjetas inspiradas en Configuración de Windows 11. Al abrirla, la ventana
+se presenta flotante, centrada y a 1080×840 mediante dispatchers efímeros de
+Hyprland; no se escribe una regla permanente en la configuración del usuario.
+`SettingsContent.qml`
+define las secciones Sistema, Bluetooth y dispositivos, Red, Personalización,
+Aplicaciones y Seguridad. Las filas usan paneles nativos o herramientas ya
+instaladas: editores de la configuración personal, audio, Bluetooth y Wi-Fi,
+selectores de tema/fondo y opciones de pantalla, atajos, barra, salvapantallas,
+terminal predeterminada, SSH e información de Omarchy. Se omitieron enlaces a
+`omarchy.menu` porque ese complemento está desactivado en la máquina de desarrollo;
+también se omitieron ajustes que instalan paquetes o requieren permisos elevados.
+La navegación lateral y las tarjetas son botones accesibles con teclado. No se
+añaden dependencias ni se invoca sudo. La paleta respeta el modo claro/oscuro
+existente. Los SVG de ajustes/persona son activos Fluent ya incluidos con MIT.
+Esta implementación se entrega en la rama de revisión
+`feat/light-dark-backgrounds`; requiere las comprobaciones remotas antes de
+integrarse en `main`. No crear un release hasta completar esa revisión.
+Resultado local: 42 pruebas Python, 20 Qt Quick Test, compilación de entradas
+contra la sesión de Omarchy, render nativo aislado, validación del plugin y
+`git diff --check` pasan. `qmllint` acaba con avisos heredados de `Start.qml`
+por imports de Omarchy que no puede resolver fuera del entorno completo; los
+dos archivos nuevos de Configuración no generan avisos.
+
+Las capturas de referencia aportadas para Configuración de Windows están
+inventariadas y resumidas en [`capturas win/REFERENCIA_SETTINGS.md`](../capturas%20win/REFERENCIA_SETTINGS.md).
+
 ## Corrección posterior: conservar Inicio en la barra
 
 El propietario observó que Inicio desaparecía. Causa confirmada: Start.qml

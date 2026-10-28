@@ -19,6 +19,13 @@ Distribución ajustada al Windows que mostró el propietario: búsqueda redondea
 
 El botón conserva el icono nativo de Omarchy en azul (`#0078d4`), un área de clic de 44 píxeles y un símbolo más grande, además del clic derecho para abrir la terminal; solo cambia el menú que abre al pulsarlo. Los iconos de aplicaciones son los instalados. Inicio se despliega debajo de la barra superior, con la barra encima; el panel nativo adapta el anclaje si la barra está en otra posición. No sustituye los menús internos de selección de Omarchy.
 
+Desde Inicio también se abre una ventana de Configuración con navegación por
+Sistema, Bluetooth y dispositivos, Red, Personalización, Aplicaciones y
+Seguridad. Su distribución se inspira en Windows 11, pero cada acceso abre una
+herramienta nativa disponible; no simula ajustes exclusivos de Windows ni
+instala dependencias. La guía local de capturas y páginas de referencia está en
+[`capturas win/REFERENCIA_SETTINGS.md`](capturas%20win/REFERENCIA_SETTINGS.md).
+
 Archivos usa el mismo icono de carpeta del tema instalado, tanto en Inicio
 como en la Taskbar. Se reutiliza el recurso local de Yaru-blue (Adwaita como
 alternativa); no se descarga ni redistribuye otro paquete. Para el índice de

@@ -32,7 +32,8 @@ QtObject {
         "#dce5ef": "#384756",
         "#f2f6fb": "#353d46",
         "#d9e3ef": "#3c4a58",
-        "#f5f8fc": "#343b43"
+        "#f5f8fc": "#343b43",
+        "#e1e6eb": "#4b535d"
 }
     function color(light) { return dark ? (darkColors[light] || light) : light; }
 }
