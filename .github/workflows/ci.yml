@@ -35,7 +35,7 @@ jobs:
   behavior:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    container: archlinux:latest
+    container: archlinux@sha256:e82623936fa1a69700b48e98b058df6eaab18b737c27473a7234a40fdecb9413
     steps:
       - name: Install tools in the disposable CI container
         run: pacman -Syu --noconfirm --needed python nodejs lua qt6-declarative qt6-svg git
