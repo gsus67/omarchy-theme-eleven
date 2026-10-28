@@ -38,6 +38,7 @@ Panel {
         function status(): string {
             return JSON.stringify({
                 open: root.opened,
+                mode: Local.Session.mode,
                 libraryReady: root.library !== null,
                 applications: root.library ? root.library.sortedEntries("").length : 0,
                 contentLoaded: content.item !== null,
