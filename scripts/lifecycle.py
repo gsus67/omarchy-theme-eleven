@@ -329,7 +329,8 @@ class Manager:
         else:
             receipt["managedBackground"] = self.native.background()
             self.save(receipt)
-        self.remember_mode(receipt["source"], mode)
+        # Keep the live selection in the receipt. Writing inside the plugin
+        # triggers Omarchy's code reload watcher; persist preferences on disable.
         return {"active": True, "mode": mode, "changed": mode != previous}
 
     def reconcile(self, source):
@@ -422,6 +423,8 @@ class Manager:
         # disabled entry. An uninstall must remove that own entry too.
         if not uninstall and not force and enabled(self.config()):
             return {"active": receipt.get("active", False), "reload": True}
+        if not uninstall and receipt.get("active"):
+            self.remember_mode(receipt["source"], receipt.get("mode", "light"))
         self.native.remove_shortcuts()
         previous = receipt.get("previousTheme", "")
         if self.native.theme() == THEME and previous:

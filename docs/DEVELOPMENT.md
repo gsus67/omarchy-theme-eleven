@@ -182,3 +182,13 @@ todos los cambios de modo. pendingMode/pendingAssets permiten recuperar una
 interrupción; un error de aplicación intenta volver al modo anterior. Al
 limpiar se eliminan solo recursos con hashes propios. No cargar controladores
 ni instalar paquetes para esta función. No publicada como nuevo release.
+
+
+La prueba real detectó que guardar appearanceMode dentro del clon en cada
+aviso disparaba el observador de código nativo. Se evita toda escritura
+innecesaria y el modo activo permanece en el recibo; se guarda en preferencias
+al DESACTIVAR, cuando el plugin ya está apagado. Así los cambios entre fondos
+no recargan el widget ni el catálogo. Si el proceso se reinicia, el modo se
+recupera del recibo. No confundir un rescan con invalidar la caché de QML:
+durante desarrollo fue necesario un reinicio nativo de shell para cargar
+las nuevas definiciones, conservando aplicaciones y anclajes.
