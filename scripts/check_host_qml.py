@@ -71,7 +71,7 @@ ShellRoot {
         }
     }
 }
-'''.replace('ENTRYPOINTS', json.dumps([(ROOT / 'start/Start.qml').as_uri(), (ROOT / 'Lifecycle.qml').as_uri(), (ROOT / 'start/MenuBridge.qml').as_uri()])).replace('CATALOG_ENTRY_URL', json.dumps((ROOT / 'start/AppCatalog.qml').as_uri())))
+'''.replace('ENTRYPOINTS', json.dumps([(ROOT / 'start/Start.qml').as_uri(), (ROOT / 'Lifecycle.qml').as_uri(), (ROOT / 'start/SettingsWindow.qml').as_uri()])).replace('CATALOG_ENTRY_URL', json.dumps((ROOT / 'start/AppCatalog.qml').as_uri())))
         env = dict(os.environ, QT_QPA_PLATFORM="wayland", WAYLAND_DISPLAY=display,
                    XDG_RUNTIME_DIR=str(base / "runtime"), QT_QUICK_CONTROLS_STYLE="Basic")
         result = subprocess.run(["quickshell", "--no-color", "-p", str(base)], env=env,

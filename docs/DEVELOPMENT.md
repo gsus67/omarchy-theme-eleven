@@ -13,8 +13,9 @@ No añadir paquetes, servicios de sistema, otro explorador ni cambios a Taskbar.
   controles de sesión de Omarchy. Usa la API compartida `shell.appLibrary`.
 - El catálogo nativo devuelve filas `{entry, score, ...}`: StartContent extrae
   `row.entry`. No tratar esas filas como si fueran DesktopEntry directamente.
-- El manifiesto declara `menu`: Omarchy solo entrega la capacidad AppLibrary
-  a los plugins que declaran ese tipo. MenuBridge conserva el summon nativo.
+- El catálogo usa la AppLibrary nativa cuando está disponible y mantiene un
+  respaldo con `DesktopEntries`. El plugin evita declarar el tipo `menu` para
+  que Omarchy enrute Inicio a la copia del widget del monitor enfocado.
 - Un componente de ciclo de vida de Quickshell aplica/restaura mediante un
   recibo, hashes y cambios individuales. Sin código de fondo fuera de la shell.
 - Preferencias ignoradas por Git dentro de `.eleven/`, para que eliminar un
@@ -70,13 +71,15 @@ El propietario autorizó después publicar el repositorio y un release. No
 modificar otra máquina sin una instrucción correspondiente. Al publicar: rama, PR y todos
 los controles verdes antes de main, tal como pidió para Taskbar.
 
-## Ventana de Configuración Eleven (trabajo local, sin publicar)
+## Ventana de Configuración Eleven
 
 Inicio abre una ventana propia de Quickshell (`start/SettingsWindow.qml`) con
 barra de título, minimizar/maximizar/cerrar, navegación lateral, búsqueda global
-y tarjetas inspiradas en Configuración de Windows 11. Al abrirla, la ventana
-se presenta flotante, centrada y a 1080×840 mediante dispatchers efímeros de
-Hyprland; no se escribe una regla permanente en la configuración del usuario.
+y tarjetas inspiradas en Configuración de Windows 11. El servicio persistente
+del plugin mantiene una sola ventana y un único destino IPC; las copias por
+monitor del widget ya no registran handlers repetidos. La ventana usa tamaño
+declarativo y se centra con dispatchers efímeros de Hyprland; no se escribe una
+regla permanente en la configuración del usuario.
 `SettingsContent.qml`
 define las secciones Sistema, Bluetooth y dispositivos, Red, Personalización,
 Aplicaciones y Seguridad. Las filas usan paneles nativos o herramientas ya
@@ -88,9 +91,9 @@ también se omitieron ajustes que instalan paquetes o requieren permisos elevado
 La navegación lateral y las tarjetas son botones accesibles con teclado. No se
 añaden dependencias ni se invoca sudo. La paleta respeta el modo claro/oscuro
 existente. Los SVG de ajustes/persona son activos Fluent ya incluidos con MIT.
-Esta implementación se entrega en la rama de revisión
-`feat/light-dark-backgrounds`; requiere las comprobaciones remotas antes de
-integrarse en `main`. No crear un release hasta completar esa revisión.
+Esta implementación está en la rama `feat/light-dark-backgrounds`; requiere las
+comprobaciones remotas antes de integrarse en `main`. No crear un release hasta
+completar esa revisión.
 Resultado local: 42 pruebas Python, 20 Qt Quick Test, compilación de entradas
 contra la sesión de Omarchy, render nativo aislado, validación del plugin y
 `git diff --check` pasan. `qmllint` acaba con avisos heredados de `Start.qml`

@@ -7,4 +7,5 @@ QtObject {
     property string mode: "light"
     property var owner: null
     property var library: null
+    property var returnStart: null
 }

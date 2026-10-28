@@ -9,8 +9,6 @@ import "." as Local
 Panel {
     id: root
     moduleName: "io.github.gsus67.omarchy-theme-eleven"
-    ipcTarget: "eleven-start"
-    manageIpc: false
     readonly property var shell: bar ? bar.shell : null
     readonly property var ownService: shell && shell.serviceFor ? shell.serviceFor(root.moduleName) : null
     readonly property var library: (ownService ? ownService.catalog : null) || Local.Session.library || (shell ? shell.appLibrary : null)
@@ -25,40 +23,8 @@ Panel {
     implicitHeight: startButton.implicitHeight
 
     function showSettings(): void {
-        root.close();
-        Quickshell.execDetached(["omarchy-shell", "shell", "summon", root.moduleName, '{"view":"settings"}']);
-    }
-
-    IpcHandler {
-        target: root.ipcTarget
-        function open(): void {
-            root.open();
-        }
-        function close(): void {
-            root.close();
-        }
-        function toggle(): void {
-            root.toggle();
-        }
-        function openSettings(): void {
-            root.showSettings();
-        }
-        function status(): string {
-            return JSON.stringify({
-                open: root.opened,
-                mode: Local.Session.mode,
-                libraryReady: root.library !== null,
-                applications: root.library ? root.library.sortedEntries("").length : 0,
-                contentLoaded: content.item !== null,
-                buttonWidth: startButton.width,
-                buttonHeight: startButton.height,
-                sessionOwnerReady: !!Local.Session.owner,
-                serviceReady: !!root.ownService,
-                serviceLibraryReady: !!(root.ownService && root.ownService.appLibrary),
-                barApiReady: !!root.shell,
-                barApiId: root.shell ? String(root.shell.pluginId) : ""
-            });
-        }
+        if (Local.Session.owner && typeof Local.Session.owner.openSettings === "function")
+            Local.Session.owner.openSettings(root, root.QsWindow.window ? root.QsWindow.window.screen : null);
     }
 
     FileView {

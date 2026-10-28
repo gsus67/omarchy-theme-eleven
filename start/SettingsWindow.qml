@@ -7,42 +7,26 @@ Item {
     id: root
     readonly property string pluginId: "io.github.gsus67.omarchy-theme-eleven"
     property var shell: null
-    property bool closingFromHost: false
-    property bool initializedGeometry: false
-    property bool needsInitialPlacement: false
+    property var targetScreen: null
+    property bool returningToStart: false
 
-    function open(payloadJson) {
-        var view = "start"
-        try {
-            let payload = JSON.parse(String(payloadJson || "{}"))
-            if (payload && payload.view === "settings") view = "settings"
-        } catch (error) {
-        }
+    readonly property bool windowVisible: window.visible
 
-        if (view === "settings") {
-            if (!initializedGeometry) {
-                window.width = 1080
-                window.height = 840
-                initializedGeometry = true
-                needsInitialPlacement = true
-            }
-            window.visible = true
-            window.minimized = false
-            floatWindowTimer.restart()
-        } else {
-            Quickshell.execDetached(["omarchy-shell", "eleven-start", "open"])
-        }
+    function openFor(screen) {
+        targetScreen = screen
+        window.minimized = false
+        window.visible = true
+        floatWindowTimer.restart()
     }
 
     function close() {
-        closingFromHost = true
         window.visible = false
-        closingFromHost = false
     }
 
-    function requestClose() {
-        if (shell && typeof shell.hide === "function") shell.hide(pluginId)
-        else window.visible = false
+    function backToStart() {
+        returningToStart = true
+        window.visible = false
+        returnTimer.start()
     }
 
     function runSettingsRoute(route) {
@@ -71,19 +55,20 @@ Item {
             var selector = "title:" + window.title
             console.info("Eleven Settings: floating window", selector)
             Quickshell.execDetached(["hyprctl", "dispatch", 'hl.dsp.window.float({action="set",window="' + selector + '"})'])
-            if (root.needsInitialPlacement) sizeWindowTimer.start()
+            Quickshell.execDetached(["hyprctl", "dispatch", 'hl.dsp.window.center({window="' + selector + '"})'])
         }
     }
 
     Timer {
-        id: sizeWindowTimer
-        interval: 100
+        id: returnTimer
+        interval: 200
         repeat: false
         onTriggered: {
-            var selector = "title:" + window.title
-            Quickshell.execDetached(["hyprctl", "dispatch", 'hl.dsp.window.resize({x=1080,y=840,window="' + selector + '"})'])
-            Quickshell.execDetached(["hyprctl", "dispatch", 'hl.dsp.window.center({window="' + selector + '"})'])
-            root.needsInitialPlacement = false
+            var target = Local.Session.returnStart
+            Local.Session.returnStart = null
+            root.returningToStart = false
+            if (target && typeof target.open === "function") target.open()
+            else if (root.shell && typeof root.shell.summon === "function") root.shell.summon(root.pluginId, "{}")
         }
     }
 
@@ -91,25 +76,22 @@ Item {
         id: window
         title: Qt.locale().name.indexOf("es") === 0 ? "Configuración" : "Settings"
         color: Local.Appearance.color("#f4f7fa")
+        screen: root.targetScreen
         visible: false
         implicitWidth: 1080
         implicitHeight: 840
         minimumSize: Qt.size(880, 620)
 
         onVisibleChanged: {
-            if (!visible && !root.closingFromHost && root.shell && typeof root.shell.hide === "function")
-                root.shell.hide(root.pluginId)
+            if (!visible && !root.returningToStart) Local.Session.returnStart = null
         }
 
         Local.SettingsContent {
             anchors.fill: parent
             userName: Quickshell.env("USER")
             deviceName: Quickshell.env("HOSTNAME")
-            onCloseRequested: root.requestClose()
-            onBackRequested: {
-                root.requestClose()
-                Quickshell.execDetached(["omarchy-shell", "eleven-start", "open"])
-            }
+            onCloseRequested: root.close()
+            onBackRequested: root.backToStart()
             onMinimizeRequested: window.minimized = true
             onMaximizeRequested: window.maximized = !window.maximized
             onOpenRequested: function(kind, route) {

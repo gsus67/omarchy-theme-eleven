@@ -6,6 +6,7 @@ import "start" as StartUI
 
 Item {
     id: root
+    readonly property string pluginId: "io.github.gsus67.omarchy-theme-eleven"
     property var shell: null
     property var manifest: null
     property alias catalog: appCatalog
@@ -21,6 +22,41 @@ Item {
         StartUI.Session.owner = root;
         StartUI.Session.library = appCatalog;
         apply.running = true;
+    }
+    function openSettings(start, screen): void {
+        StartUI.Session.returnStart = start || null;
+        if (start && typeof start.close === "function") start.close();
+        settingsWindow.openFor(screen || null);
+    }
+
+    IpcHandler {
+        target: "eleven-start"
+        function open(): void { if (root.shell) root.shell.summon(root.pluginId, "{}") }
+        function close(): void { if (root.shell) root.shell.hide(root.pluginId) }
+        function toggle(): void { if (root.shell) root.shell.toggle(root.pluginId, "{}") }
+        function openSettings(): void { root.openSettings(null, null) }
+        function status(): string {
+            var entries = appCatalog.sortedEntries("");
+            var isOpen = root.shell && root.shell.isPluginOpen
+                ? root.shell.isPluginOpen(root.pluginId) : false;
+            return JSON.stringify({
+                open: isOpen,
+                mode: StartUI.Session.mode,
+                libraryReady: entries.length > 0,
+                applications: entries.length,
+                contentLoaded: isOpen,
+                sessionOwnerReady: StartUI.Session.owner === root,
+                serviceReady: true,
+                serviceLibraryReady: !!root.appLibrary,
+                barApiReady: !!root.shell,
+                settingsVisible: settingsWindow.windowVisible
+            });
+        }
+    }
+
+    StartUI.SettingsWindow {
+        id: settingsWindow
+        shell: root.shell
     }
     // Watch only directory metadata: never load wallpaper bytes. This catches
     // atomic replacement of the native background symlink without polling.
