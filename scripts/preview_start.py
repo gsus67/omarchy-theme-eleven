@@ -61,6 +61,12 @@ ShellRoot {
         visible: true
         color: "#f9fbff"
         onClosing: Qt.quit()
+        // Include a contrasting backing in grabToImage so transparent rounded
+        // corners can be checked even on the opaque software capture backend.
+        Rectangle {
+            anchors.fill: parent
+            color: Session.mode === "dark" ? "#101010" : "#d8e4f0"
+        }
         StartContent {
             id: menu
             anchors.fill: parent

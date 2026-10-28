@@ -213,3 +213,18 @@ por su índice SVG-first); alternativa SVG Adwaita si Yaru-blue no existe. No
 se redistribuyen esos recursos ni se cambian sus licencias. El recibo y la
 retirada del único icono aplicado siguen igual. No confundir propuesta de
 Document Folder con el resultado final elegido por el propietario.
+
+
+Corrección de esquinas solicitada: Rectangle.clip es rectangular y no recorta
+sus hijos al radio del fondo. El pie ahora usa bottomLeftRadius/bottomRightRadius
+8 y topLeftRadius/topRightRadius 0; sus márgenes de 1 px conservan el borde.
+El KeyboardPanel nativo toma su radio de Style.cornerRadius/Hyprland: Eleven
+aplica decoration.rounding=8 en tiempo de ejecución mediante hl.config,
+registrando previousRounding en recibo y restaurándolo al apagar si sigue en 8.
+Un valor distinto posterior se conserva. La restauración cubre también un
+fallo antes de aplicar el tema. No edita ~/.config/hypr ni usa máscaras/blur.
+La rama de iconos superiores sigue en investigación: una paleta no sustituye
+los glifos de los widgets. El clon nativo con omarchy.clonedFrom conserva
+capacidades de OSD/WiFiQR/Speedtest; una sustitución genérica bajo el mismo id
+de Eleven perdería esas capacidades. Pendiente decisión del propietario sobre
+variantes auxiliares visibles en Tool frente a conservar una sola entrada.

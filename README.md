@@ -42,6 +42,13 @@ solo cuando hay cambios; no hay sondeo periódico ni otro proceso residente.
 Al apagar o desinstalar se retira el observador junto al plugin y se restauran
 los ajustes anteriores cuando siguen siendo propios. No cierra Nautilus.
 
+## Esquinas
+
+Mientras está activo, Eleven aplica un radio nativo de 8 px a ventanas y
+paneles. Inicio redondea también el pie, sin máscaras gráficas adicionales.
+El ajuste de Hyprland es temporal: no modifica archivos de configuración y
+restaura el valor anterior al desactivar, salvo que se haya cambiado después.
+
 ## Explorador y barras
 
 Nautilus sigue siendo el explorador. Esta etapa aplica el modo claro y los iconos mediante los ajustes GNOME existentes; no parchea GTK ni instala otro explorador. «Este equipo» se reutiliza desde «Discos en mosaicos» de Tool, sin activarlo ni duplicar su extensión desde Eleven.

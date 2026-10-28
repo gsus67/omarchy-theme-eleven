@@ -412,6 +412,10 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.margins: 1
         height: 64
+        bottomLeftRadius: root.radius
+        bottomRightRadius: root.radius
+        topLeftRadius: 0
+        topRightRadius: 0
         color: Appearance.color("#e4e8ed")
         Rectangle {
             anchors.top: parent.top

@@ -24,6 +24,7 @@ class FakeNative:
         self.fail = False
         self.unset = set()
         self.icon_refreshes = 0
+        self.radius = 0
 
     def theme(self):
         return self.selected
@@ -34,6 +35,12 @@ class FakeNative:
         if self.fail:
             self.fail = False
             raise RuntimeError("Interrupted after staging")
+
+    def rounding(self):
+        return self.radius
+
+    def set_rounding(self, value):
+        self.radius = value
 
     def file_icon_data(self):
         return (ROOT / "assets/fluent/folder.svg").read_bytes()
@@ -176,6 +183,34 @@ class LifecycleTest(unittest.TestCase):
         self.manager.reconcile(self.source)
         self.assertIn('mode = "light"', (self.paths.theme / "colors.toml").read_text())
         self.assertNotIn("pendingMode", self.manager.load())
+
+    def test_rounding_is_temporary_and_preserves_later_user_changes(self):
+        self.native.radius = 3
+        self.manager.reconcile(self.source)
+        self.assertEqual(self.native.radius, 8)
+        self.disable()
+        self.manager.deactivate()
+        self.assertEqual(self.native.radius, 3)
+        self.enable()
+        self.manager.reconcile(self.source)
+        self.native.radius = 12
+        self.manager.reconcile(self.source)
+        self.assertEqual(self.native.radius, 12)
+        self.disable()
+        self.manager.deactivate()
+        self.assertEqual(self.native.radius, 12)
+
+    def test_rounding_restores_if_activation_fails_before_theme_apply(self):
+        self.native.radius = 3
+        def change(value):
+            self.native.radius = value
+            if value == 8:
+                raise RuntimeError("Interrupted before theme apply")
+        with patch.object(self.native, "set_rounding", side_effect=change):
+            with self.assertRaises(RuntimeError):
+                self.manager.reconcile(self.source)
+        self.assertEqual(self.native.radius, 3)
+        self.assertEqual(self.native.theme(), "tokyo-night")
 
     def test_files_icon_is_owned_refreshed_once_and_removed_on_disable(self):
         self.manager.reconcile(self.source)

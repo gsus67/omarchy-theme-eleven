@@ -166,6 +166,18 @@ class Native:
                     for name in ("colors.toml", "shell.toml")]
         self.command(["omarchy-shell", "shell", "applyTheme", *payloads])
 
+    def rounding(self):
+        value = json.loads(self.command(["hyprctl", "getoption", "decoration:rounding", "-j"]))["int"]
+        if not isinstance(value, int) or not 0 <= value <= 100:
+            raise RuntimeError("Cannot record window corner radius")
+        return value
+
+    def set_rounding(self, value):
+        if not isinstance(value, int) or not 0 <= value <= 100:
+            raise ValueError("Invalid corner radius")
+        self.command(["hyprctl", "eval", "hl.config({decoration = {rounding = " + str(value) + "}})"])
+        self.refresh()  # native Style re-reads rounding when applying the palette
+
     def file_icon_data(self):
         # Reuse the installed folder artwork selected by Eleven's icon theme.
         # Embed PNG bytes in a self-contained SVG so the existing SVG-first app
@@ -269,6 +281,13 @@ class Manager:
                 atomic_write(self.paths.shell, after)
             return
         raise RuntimeError("Shell settings are changing; retry activation")
+
+    def apply_rounding(self, receipt):
+        if "previousRounding" not in receipt:
+            receipt["previousRounding"] = self.native.rounding()
+            self.save(receipt)
+        if self.native.rounding() in (receipt["previousRounding"], 8):
+            self.native.set_rounding(8)
 
     def stage_file_icon(self, receipt):
         target = self.paths.file_icon
@@ -405,6 +424,8 @@ class Manager:
                 self.apply_mode(receipt, receipt.get("mode", "light"))
                 if not owned and background:
                     self.native.set_background(background)
+            if self.native.theme() == THEME:
+                self.apply_rounding(receipt)
             if self.stage_file_icon(receipt):
                 self.native.refresh_icons()
             # Hot reload/login must not undo a theme the user selected later.
@@ -435,6 +456,7 @@ class Manager:
         receipt.update(source=str(source), phase="prepared")
         self.save(receipt)
         icon_changed = self.stage_file_icon(receipt)
+        self.apply_rounding(receipt)
         if self.paths.theme.is_symlink():
             raise RuntimeError("Managed theme directory became a symlink")
         self.paths.theme.mkdir(parents=True, exist_ok=True)
@@ -477,6 +499,9 @@ class Manager:
             self.remember_mode(receipt["source"], receipt.get("mode", "light"))
         self.native.remove_shortcuts()
         previous = receipt.get("previousTheme", "")
+        if ("previousRounding" in receipt and self.native.rounding() == 8 and
+                (self.native.theme() == THEME or receipt.get("phase") in ("prepared", "applying"))):
+            self.native.set_rounding(receipt["previousRounding"])
         if self.native.theme() == THEME and previous:
             settings = {key: self.native.get(key) for key in receipt.get("managedSettings", {})}
             restore_background = self.native.background() == receipt.get("managedBackground")
@@ -571,6 +596,8 @@ def main():
         elif args.operation == "shortcuts":
             receipt = manager.load()
             if receipt and enabled(manager.config()):
+                if manager.native.theme() == THEME:
+                    manager.apply_rounding(receipt)
                 receipt["shortcuts"] = manager.native.install_shortcuts(Path(receipt["source"]))
                 manager.save(receipt)
                 result = receipt["shortcuts"]
