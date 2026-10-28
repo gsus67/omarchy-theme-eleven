@@ -82,9 +82,7 @@ def plain_asset(root, relative):
     return True
 
 
-def atomic_write(path, data, mode=0o600):
-    if mode not in (0o600, 0o644):
-        raise ValueError("Only private state or readable theme assets are supported")
+def atomic_write(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, temporary = tempfile.mkstemp(prefix=".eleven-", dir=path.parent)
     try:
@@ -92,10 +90,7 @@ def atomic_write(path, data, mode=0o600):
             output.write(data)
             output.flush()
             os.fsync(output.fileno())
-        if mode == 0o644:
-            os.chmod(temporary, 0o644)
-        else:
-            os.chmod(temporary, 0o600)
+        os.chmod(temporary, 0o600)
         os.replace(temporary, path)
     finally:
         Path(temporary).unlink(missing_ok=True)
@@ -316,7 +311,7 @@ class Manager:
             target.parent.mkdir(parents=True, exist_ok=True)
             receipt["assets"][relative] = digest(origin)
             self.save(receipt)
-            atomic_write(target, origin.read_bytes(), 0o644)
+            atomic_write(target, origin.read_bytes())
         atomic_write(self.paths.helper, Path(__file__).read_bytes())
         receipt["phase"] = "applying"
         self.save(receipt)
