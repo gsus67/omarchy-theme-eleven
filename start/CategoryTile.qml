@@ -34,7 +34,9 @@ ElevenButton {
                 height: 32
                 x: (index % 2 === 0 ? 0.28 : 0.72) * tile.width - 16
                 y: (index < 2 ? 0.28 : 0.72) * tile.width - 16
-                source: tile.library ? tile.library.iconSource(modelData.icon || "") : ""
+                source: String(modelData.id || "").replace(/\.desktop$/, "") === "org.gnome.Nautilus"
+                    ? Qt.resolvedUrl("../assets/fluent/files.svg")
+                    : tile.library ? tile.library.iconSource(modelData.icon || "") : ""
                 sourceSize.width: 48
                 sourceSize.height: 48
                 fillMode: Image.PreserveAspectFit

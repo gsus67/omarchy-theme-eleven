@@ -109,6 +109,9 @@ class Paths:
         self.theme = self.config / "omarchy/themes" / THEME
         # Omarchy 4.0.6 itself uses this fixed path, not XDG_STATE_HOME.
         self.current = self.home / ".local/state/omarchy/current"
+        # Match the existing Omarchy/Taskbar user-first icon index.
+        self.icon_root = self.home / ".local/share/icons"
+        self.file_icon = self.icon_root / "eleven-managed/scalable/apps/org.gnome.Nautilus.svg"
 
 
 def entries(config):
@@ -162,6 +165,10 @@ class Native:
         payloads = [base64.b64encode((self.paths.current / "theme" / name).read_bytes()).decode()
                     for name in ("colors.toml", "shell.toml")]
         self.command(["omarchy-shell", "shell", "applyTheme", *payloads])
+
+    def refresh_icons(self):
+        # Recreate the native widgets' icon indexes without changing Taskbar.
+        self.command(["omarchy-shell", "shell", "rescanPlugins"])
 
     def get(self, key):
         return self.command(["gsettings", "get", SCHEMA, key])
@@ -250,6 +257,36 @@ class Manager:
                 atomic_write(self.paths.shell, after)
             return
         raise RuntimeError("Shell settings are changing; retry activation")
+
+    def stage_file_icon(self, receipt):
+        source = Path(receipt["source"])
+        relative = "assets/fluent/files.svg"
+        target = self.paths.file_icon
+        if not plain_asset(source, relative) or not (source / relative).is_file():
+            raise RuntimeError("Invalid Files icon resource")
+        if not plain_asset(self.paths.icon_root, str(target.relative_to(self.paths.icon_root))):
+            raise RuntimeError("Files icon path contains a symlink")
+        if target.exists() and digest(target) != receipt.get("fileIconHash"):
+            raise RuntimeError("Files icon path already belongs to the user")
+        content = (source / relative).read_bytes()
+        current = hashlib.sha256(content).hexdigest()
+        if target.is_file() and digest(target) == current:
+            return False
+        receipt["fileIconHash"] = current
+        self.save(receipt)
+        atomic_write(target, content)
+        return True
+
+    def remove_file_icon(self, receipt):
+        target = self.paths.file_icon
+        if (plain_asset(self.paths.icon_root, str(target.relative_to(self.paths.icon_root)))
+                and target.is_file() and digest(target) == receipt.get("fileIconHash")):
+            target.unlink()
+            for directory in (target.parent, target.parent.parent, target.parent.parent.parent):
+                if directory.is_dir() and not any(directory.iterdir()):
+                    directory.rmdir()
+            return True
+        return False
 
     def preferences(self, source):
         path = Path(source) / ".eleven/preferences.json"
@@ -360,6 +397,8 @@ class Manager:
                 self.apply_mode(receipt, receipt.get("mode", "light"))
                 if not owned and background:
                     self.native.set_background(background)
+            if self.stage_file_icon(receipt):
+                self.native.refresh_icons()
             # Hot reload/login must not undo a theme the user selected later.
             return {"active": True, "theme": self.native.theme(), "mode": receipt.get("mode", "light")}
         if receipt is None:
@@ -387,6 +426,7 @@ class Manager:
                            previousUserValues={key: self.native.user_value(key) for key in ("color-scheme", "gtk-theme", "icon-theme")})
         receipt.update(source=str(source), phase="prepared")
         self.save(receipt)
+        icon_changed = self.stage_file_icon(receipt)
         if self.paths.theme.is_symlink():
             raise RuntimeError("Managed theme directory became a symlink")
         self.paths.theme.mkdir(parents=True, exist_ok=True)
@@ -412,6 +452,8 @@ class Manager:
         receipt["shortcuts"] = self.native.install_shortcuts(source)
         receipt.update(active=True, phase="active")
         self.save(receipt)
+        if icon_changed:
+            self.native.refresh_icons()
         return {"active": True, "theme": THEME, "mode": receipt.get("mode", "light")}
 
     def deactivate(self, *, uninstall=False, force=False):
@@ -466,8 +508,11 @@ class Manager:
             self.paths.preferences.unlink(missing_ok=True)
             if self.paths.preferences.parent.exists() and not any(self.paths.preferences.parent.iterdir()):
                 self.paths.preferences.parent.rmdir()
+        icon_removed = self.remove_file_icon(receipt)
         self.paths.receipt.unlink(missing_ok=True)
         self.paths.helper.unlink(missing_ok=True)
+        if icon_removed:
+            self.native.refresh_icons()
         return {"active": False, "uninstalled": uninstall}
 
 

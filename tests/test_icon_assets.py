@@ -27,7 +27,7 @@ class IconAssetsTest(unittest.TestCase):
         for path in ROOT.rglob("*.svg"):
             with self.subTest(icon=path.name):
                 for element in ET.parse(path).iter():
-                    self.assertIn(element.tag.rsplit("}", 1)[-1], ("svg", "path", "g", "defs", "clipPath", "rect", "circle"))
+                    self.assertIn(element.tag.rsplit("}", 1)[-1], ("svg", "path", "g", "defs", "clipPath", "rect", "circle", "linearGradient", "radialGradient", "stop"))
                     for key, value in element.attrib.items():
                         self.assertFalse(key.lower().startswith("on"))
                         self.assertNotIn("href", key.lower())

@@ -192,3 +192,14 @@ no recargan el widget ni el catálogo. Si el proceso se reinicia, el modo se
 recupera del recibo. No confundir un rescan con invalidar la caché de QML:
 durante desarrollo fue necesario un reinicio nativo de shell para cargar
 las nuevas definiciones, conservando aplicaciones y anclajes.
+
+
+Icono Files solicitado en Inicio Y Taskbar inferior: se incorpora sin alterar
+el SVG oficial Document Folder 24 color de la misma revisión Fluent MIT. Inicio
+lo usa directamente; para Taskbar se prepara un solo SVG bajo
+~/.local/share/icons/eleven-managed/scalable/apps/org.gnome.Nautilus.svg,
+que su índice nativo ya prioriza. Propietario: fileIconHash en recibo; rechazar
+colisiones/enlaces y conservar ediciones ajenas. Retirar solo archivo propio y
+padres vacíos del contenedor. rescanPlugins nativo una vez al añadir/retirar
+recrea índices/widgets; no se ejecuta al alternar claro/oscuro. No cambios de
+Taskbar, lanzadores, asociaciones, paquetes ni cachés compartidas.

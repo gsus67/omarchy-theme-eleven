@@ -197,6 +197,13 @@
       "upstreamSha256": "c19ff922990add433c3d5ddc2fb9843b3e4d31c1074ef05295d46c4ec8f23c83",
       "sha256": "01c7b0e9aa27e6fc3521d458516b10eeb16edf593b174997a9aa1d4dfd0f0e5c",
       "modification": "Dark variant: monochrome fill #e3e9f0 (folder retains original gold); geometry unchanged."
+    },
+    {
+      "file": "files.svg",
+      "url": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/60d561a815310bd52914fa0bccee14836428e23b/assets/Document%20Folder/SVG/ic_fluent_document_folder_24_color.svg",
+      "upstreamSha256": "06f76f631718174c6bdafb0c6609166ddb78092ce55ab9b7bba272cd827ca14d",
+      "sha256": "06f76f631718174c6bdafb0c6609166ddb78092ce55ab9b7bba272cd827ca14d",
+      "modification": "None. Official full-color Document Folder icon, unchanged."
     }
   ],
   "noticeSha256": {

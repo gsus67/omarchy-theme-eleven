@@ -23,6 +23,7 @@ class FakeNative:
         self.calls = []
         self.fail = False
         self.unset = set()
+        self.icon_refreshes = 0
 
     def theme(self):
         return self.selected
@@ -33,6 +34,9 @@ class FakeNative:
         if self.fail:
             self.fail = False
             raise RuntimeError("Interrupted after staging")
+
+    def refresh_icons(self):
+        self.icon_refreshes += 1
 
     def get(self, key):
         return self.settings[key]
@@ -71,6 +75,8 @@ class LifecycleTest(unittest.TestCase):
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, target)
         shutil.copytree(ROOT / "variants", self.source / "variants")
+        (self.source / "assets/fluent").mkdir(parents=True)
+        shutil.copyfile(ROOT / "assets/fluent/files.svg", self.source / "assets/fluent/files.svg")
         self.original = {"version": 1, "bar": {"position": "top", "transparent": True, "layout": {
             "left": [{"id": "omarchy.menu", "custom": "keep"}, {"id": "omarchy.workspaces"}],
             "center": [{"id": "omarchy.clock"}], "right": [{"id": "tool", "keep": 1}]}},
@@ -169,6 +175,33 @@ class LifecycleTest(unittest.TestCase):
         self.manager.reconcile(self.source)
         self.assertIn('mode = "light"', (self.paths.theme / "colors.toml").read_text())
         self.assertNotIn("pendingMode", self.manager.load())
+
+    def test_files_icon_is_owned_refreshed_once_and_removed_on_disable(self):
+        self.manager.reconcile(self.source)
+        self.assertEqual(self.paths.file_icon.read_bytes(), (self.source / "assets/fluent/files.svg").read_bytes())
+        self.assertEqual(self.native.icon_refreshes, 1)
+        self.manager.reconcile(self.source)
+        self.select_background("dark")
+        self.assertEqual(self.native.icon_refreshes, 1)
+        self.disable()
+        self.manager.deactivate()
+        self.assertFalse(self.paths.file_icon.exists())
+        self.assertFalse((self.paths.icon_root / "eleven-managed").exists())
+        self.assertEqual(self.native.icon_refreshes, 2)
+
+    def test_user_modified_files_icon_is_not_removed(self):
+        self.manager.reconcile(self.source)
+        self.paths.file_icon.write_text("user icon")
+        self.disable()
+        self.manager.deactivate()
+        self.assertEqual(self.paths.file_icon.read_text(), "user icon")
+
+    def test_existing_files_icon_is_not_overwritten(self):
+        self.paths.file_icon.parent.mkdir(parents=True)
+        self.paths.file_icon.write_text("existing user icon")
+        with self.assertRaisesRegex(RuntimeError, "belongs to the user"):
+            self.manager.reconcile(self.source)
+        self.assertEqual(self.paths.file_icon.read_text(), "existing user icon")
 
     def test_activation_replaces_only_start_preserving_bar_and_taskbar(self):
         self.manager.reconcile(self.source)

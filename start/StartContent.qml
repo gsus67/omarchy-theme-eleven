@@ -49,6 +49,7 @@ Rectangle {
         powerMenu.open();
     }
     function symbol(name) {
+        if (name === "folder") return Qt.resolvedUrl("../assets/fluent/files.svg");
         return Qt.resolvedUrl("../assets/fluent/" + (Appearance.dark ? "dark/" : "") + name + ".svg");
     }
     function catalog(text) {
@@ -75,6 +76,8 @@ Rectangle {
         search.forceActiveFocus();
     }
     function iconFor(entry) {
+        var id = String(entry.id || "").replace(/\.desktop$/, "");
+        if (id === "org.gnome.Nautilus") return symbol("folder");
         return library ? library.iconSource(entry.icon || "") : "";
     }
     function nameFor(entry) {
